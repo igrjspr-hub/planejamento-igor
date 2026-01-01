@@ -29,7 +29,7 @@
                   linear-gradient(180deg, #070b14 0%, #0b1220 100%);
     }
     header{
-      padding:16px 16px;
+      padding:16px;
       border-bottom: 1px solid var(--line);
       background: rgba(17,26,46,.55);
       backdrop-filter: blur(10px);
@@ -37,7 +37,7 @@
       top:0;
       z-index: 50;
     }
-    .wrap{ max-width: 1160px; margin: 0 auto; }
+    .wrap{ max-width: 1180px; margin: 0 auto; }
     h1{ margin:0; font-size: 18px; letter-spacing:.2px; }
     .sub{ margin-top:6px; font-size: 12px; color:var(--muted); line-height:1.35; }
     .topbar{ display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
@@ -56,7 +56,7 @@
     .btn.good{ background: rgba(49,208,125,.14); border-color: rgba(49,208,125,.35); }
 
     main{ padding: 16px 16px 44px; }
-    .grid{ display:grid; grid-template-columns: 1.15fr .85fr; gap:14px; align-items:start; }
+    .grid{ display:grid; grid-template-columns: 1.12fr .88fr; gap:14px; align-items:start; }
     @media (max-width: 980px){ .grid{ grid-template-columns: 1fr; } }
 
     .card{
@@ -76,7 +76,12 @@
       background: rgba(15,23,48,.6);
     }
     .title{ font-size: 13px; font-weight: 800; }
+    .small{ font-size: 11px; color: var(--muted); }
     .body{ padding: 12px 14px; }
+
+    /* LISTS */
+    .twoCols{ display:grid; grid-template-columns: 1fr 1fr; gap:12px; }
+    @media (max-width: 860px){ .twoCols{ grid-template-columns: 1fr; } }
 
     .list{ display:flex; flex-direction:column; gap:10px; }
     .item{
@@ -85,13 +90,21 @@
       border-radius: 12px;
       padding:10px;
     }
-    .item .top{
-      display:grid;
-      grid-template-columns: 1.5fr .6fr .9fr .6fr;
+
+    /* FLEX layout para evitar sobreposição */
+    .fields{
+      display:flex;
+      flex-wrap:wrap;
       gap:10px;
-      align-items:end;
+      align-items:flex-end;
     }
-    @media (max-width: 900px){ .item .top{ grid-template-columns: 1fr 1fr; } }
+    .field{ flex: 1 1 220px; min-width: 180px; }
+    .field.day{ flex: 0 0 90px; min-width: 90px; }
+    .field.actions{ flex: 0 0 auto; min-width:auto; display:flex; justify-content:flex-end; }
+    @media (max-width: 520px){
+      .field.day{ flex: 1 1 110px; min-width: 110px; }
+      .field.actions{ width:100%; }
+    }
 
     label{ font-size: 11px; color:var(--muted); display:block; margin-bottom:6px; }
     input, select{
@@ -103,41 +116,45 @@
       color: var(--txt);
       outline:none;
       font-size: 13px;
+      min-width:0;
+    }
+    input:focus, select:focus{
+      border-color: rgba(93,178,255,.55);
+      box-shadow: 0 0 0 3px rgba(93,178,255,.16);
     }
 
-    /* Campo dinheiro */
+    /* Campo dinheiro — legível e sem cortar */
     .money{
       display:flex;
       align-items:center;
-      gap:8px;
       width:100%;
-      padding:0;
       border-radius: 10px;
       border: 1px solid var(--line);
       background: rgba(0,0,0,.18);
+      overflow:hidden;
+      min-width: 0;
     }
     .money span{
       padding:10px 10px;
-      color: rgba(234,240,255,.78);
-      font-weight: 800;
+      color: rgba(234,240,255,.85);
+      font-weight: 900;
       font-size: 13px;
       border-right: 1px solid var(--line);
       background: rgba(255,255,255,.04);
-      border-top-left-radius: 10px;
-      border-bottom-left-radius: 10px;
       user-select:none;
       white-space:nowrap;
+      flex: 0 0 auto;
     }
     .money input{
       border:0;
       background: transparent;
       padding:10px 10px;
       font-family: var(--mono);
-      font-size: 14px;
+      font-size: 15px;
       text-align:right;
-      min-width: 140px;
+      width: 100%;
+      min-width: 0;
     }
-    .money input::placeholder{ color: rgba(234,240,255,.35); }
 
     .row2{ display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:10px; }
     @media (max-width: 720px){ .row2{ grid-template-columns: 1fr; } }
@@ -156,7 +173,9 @@
     .chip.warn{ background: rgba(255,209,102,.14); color: #fff0c7; border-color: rgba(255,209,102,.35); }
     .chip.bad{ background: rgba(255,92,122,.14); color: #ffd0db; border-color: rgba(255,92,122,.35); }
 
+    /* KPIs */
     .kpis{ display:grid; grid-template-columns: 1fr 1fr; gap:10px; }
+    @media (max-width: 520px){ .kpis{ grid-template-columns: 1fr; } }
     .kpi{
       border:1px solid var(--line);
       background: rgba(0,0,0,.14);
@@ -167,34 +186,18 @@
     .kpi .v{ font-size: 16px; font-weight: 900; margin-top:4px; }
     .kpi .h{ font-size: 11px; color: var(--muted); margin-top:6px; line-height:1.35; }
 
-    table{
-      width:100%;
-      border-collapse:collapse;
-      font-size: 12px;
-      margin-top: 10px;
-    }
-    th, td{
-      padding:10px 8px;
-      border-bottom:1px solid var(--line);
-      vertical-align:top;
-    }
+    table{ width:100%; border-collapse:collapse; font-size: 12px; margin-top: 10px; }
+    th, td{ padding:10px 8px; border-bottom:1px solid var(--line); vertical-align:top; }
     th{ text-align:left; color:var(--muted); font-weight:800; }
     td.r, th.r{ text-align:right; white-space:nowrap; }
     .mono{ font-family: var(--mono); }
-
     .note{ margin-top:10px; font-size: 12px; color: var(--muted); line-height: 1.45; }
     .ok{ color: var(--good); font-weight: 900; }
     .bad{ color: var(--bad); font-weight: 900; }
     .hr{ height:1px; background: var(--line); margin: 12px 0; }
-    .small{ font-size: 11px; color: var(--muted); }
 
     /* Charts */
-    .charts{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:10px;
-      margin-top:10px;
-    }
+    .charts{ display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:10px; }
     @media (max-width: 720px){ .charts{ grid-template-columns: 1fr; } }
     .chartBox{
       border:1px solid var(--line);
@@ -202,13 +205,7 @@
       border-radius: 12px;
       padding:10px;
     }
-    .chartTitle{
-      display:flex; align-items:center; justify-content:space-between;
-      gap:10px;
-      font-size: 12px;
-      font-weight: 900;
-      margin-bottom:8px;
-    }
+    .chartTitle{ display:flex; align-items:center; justify-content:space-between; gap:10px; font-size: 12px; font-weight: 900; margin-bottom:8px; }
     canvas{
       width:100%;
       height:240px;
@@ -216,28 +213,17 @@
       border-radius: 10px;
       background: rgba(255,255,255,.03);
       border: 1px solid rgba(255,255,255,.06);
+      pointer-events:none; /* NÃO bloqueia cliques */
     }
-    .legend{
-      margin-top:8px;
-      display:flex;
-      flex-wrap:wrap;
-      gap:8px;
-    }
+    .legend{ margin-top:8px; display:flex; flex-wrap:wrap; gap:8px; }
     .legItem{
-      display:flex;
-      align-items:center;
-      gap:6px;
-      font-size: 11px;
-      color: var(--muted);
+      display:flex; align-items:center; gap:6px;
+      font-size: 11px; color: var(--muted);
       border: 1px solid rgba(255,255,255,.08);
       background: rgba(255,255,255,.04);
-      padding: 5px 8px;
-      border-radius: 999px;
+      padding: 5px 8px; border-radius: 999px;
     }
-    .swatch{
-      width:10px; height:10px; border-radius: 3px;
-      border:1px solid rgba(255,255,255,.12);
-    }
+    .swatch{ width:10px; height:10px; border-radius: 3px; border:1px solid rgba(255,255,255,.12); }
   </style>
 </head>
 <body>
@@ -245,13 +231,12 @@
   <div class="wrap">
     <h1>Simulador Financeiro (Ciclo 05 / 15 / 20)</h1>
     <div class="sub">
-      Edite <b>Entradas</b> e <b>Despesas</b>. Marque despesas “Até dia 15” (azul).
-      Use “Uso no Plano 05” para: <b>Blindagem</b>, <b>Agiota</b>, <b>Escola Dez</b>.
-      O simulador calcula o <b>Plano do Dia 05</b>, <b>Mercado por dia</b> e mostra gráficos de <b>para onde o dinheiro vai</b>.
+      Edite <b>Entradas</b> e <b>Despesas</b>. Marque “Até dia 15” nas contas azuis.
+      Use “Uso no Plano 05” para <b>Blindagem</b>, <b>Agiota</b> e <b>Escola Dez</b>.
+      Tudo calcula automaticamente enquanto você digita.
     </div>
 
     <div class="topbar">
-      <button class="btn primary" id="btnSimular">Simular</button>
       <button class="btn" id="btnSalvar">Salvar</button>
       <button class="btn danger" id="btnReset">Reset (padrão)</button>
       <button class="btn" id="btnExport">Exportar JSON</button>
@@ -261,50 +246,44 @@
 
 <main class="wrap">
   <div class="grid">
-    <!-- ESQUERDA -->
+    <!-- LEFT -->
     <div class="card">
       <div class="hd">
         <div class="title">Entradas & Despesas</div>
-        <div class="small">Tudo editável — valores em Reais (R$)</div>
+        <div class="small">Campos sempre clicáveis • valores em Reais (R$)</div>
       </div>
 
       <div class="body">
-        <div class="row2">
+        <div class="twoCols">
           <div class="card" style="box-shadow:none;">
             <div class="hd" style="border:none; background:transparent; padding:0 0 10px 0;">
-              <div class="title">Entradas (inflows)</div>
-              <div class="tools">
-                <button class="btn good" id="addEntrada">+ Adicionar</button>
-              </div>
+              <div class="title">Entradas</div>
+              <button class="btn good" id="addEntrada">+ Adicionar</button>
             </div>
             <div class="list" id="entradasList"></div>
-            <div class="note">
-              Use uma entrada <b>“Saldo inicial”</b> com <b>dia 0</b> para simular o dinheiro que já está na conta.
-            </div>
+            <div class="note">Use uma entrada <b>Saldo inicial</b> com <b>dia 0</b> para simular o dinheiro já em conta.</div>
           </div>
 
           <div class="card" style="box-shadow:none;">
             <div class="hd" style="border:none; background:transparent; padding:0 0 10px 0;">
-              <div class="title">Despesas (expenses)</div>
-              <div class="tools">
-                <button class="btn good" id="addDespesa">+ Adicionar</button>
-              </div>
+              <div class="title">Despesas</div>
+              <button class="btn good" id="addDespesa">+ Adicionar</button>
             </div>
             <div class="list" id="despesasList"></div>
             <div class="note">
-              <span class="chip blue">Até dia 15</span> = contas que precisam estar pagas até 15.<br/>
-              “Uso no Plano 05”: <b>Blindagem</b> (mercado/combustível/farmácia), <b>Agiota</b>, <b>Escola Dez</b>.
+              <span class="chip blue">Até dia 15</span> = contas “azuis”.<br/>
+              “Uso no Plano 05” = Blindagem / Agiota / Escola Dez.
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- DIREITA -->
+    <!-- RIGHT -->
     <div class="card">
       <div class="hd">
         <div class="title">Resultados</div>
-        <div class="small">Cálculo automático</div>
+        <div class="small">Atualiza automaticamente</div>
       </div>
       <div class="body">
         <div class="kpis">
@@ -327,14 +306,14 @@
           <div class="kpi">
             <div class="l">Sobra após Plano do Dia 05</div>
             <div class="v" id="kpiSobra05">—</div>
-            <div class="h">Após blindagem + agiota + contas até 15 + escola dez</div>
+            <div class="h">Blindagem + agiota + contas até 15 + escola dez</div>
           </div>
 
           <div class="kpi" style="grid-column: 1 / -1;">
             <div class="l">Quanto posso gastar por dia no mercado (comida)</div>
             <div class="v" id="kpiMercadoDia">—</div>
             <div class="h">
-              Considerando <b>30 dias</b>. O valor vem da soma das despesas com <b>Categoria = Mercado (mês)</b>.
+              Considerando 30 dias. Vem da soma das despesas com <b>Categoria = Mercado (mês)</b>.
               Ex.: R$ 1.200/mês → R$ 40/dia.
             </div>
           </div>
@@ -345,31 +324,21 @@
         <div class="card" style="box-shadow:none;">
           <div class="hd" style="border:none; background:transparent; padding:0 0 8px 0;">
             <div class="title">Para onde o dinheiro vai (gráficos)</div>
-            <div class="small">Baseado nas despesas cadastradas</div>
+            <div class="small" id="chartTotal">—</div>
           </div>
 
           <div class="charts">
             <div class="chartBox">
-              <div class="chartTitle">
-                <span>Pizza (Distribuição)</span>
-                <span class="small" id="pieTotal">—</span>
-              </div>
+              <div class="chartTitle"><span>Pizza</span><span class="small" id="pieTotal">—</span></div>
               <canvas id="pieChart"></canvas>
               <div class="legend" id="pieLegend"></div>
             </div>
 
             <div class="chartBox">
-              <div class="chartTitle">
-                <span>Colunas (Comparação)</span>
-                <span class="small" id="barTotal">—</span>
-              </div>
+              <div class="chartTitle"><span>Colunas</span><span class="small" id="barTotal">—</span></div>
               <canvas id="barChart"></canvas>
               <div class="legend" id="barLegend"></div>
             </div>
-          </div>
-
-          <div class="note small">
-            Grupos: <b>Blindagem</b>, <b>Agiota</b>, <b>Escola</b>, <b>Contas até 15</b>, <b>Mercado (mês)</b>, <b>Outras despesas</b>.
           </div>
         </div>
 
@@ -377,7 +346,7 @@
 
         <div class="card" style="box-shadow:none;">
           <div class="hd" style="border:none; background:transparent; padding:0 0 8px 0;">
-            <div class="title">Plano do Dia 05 (ordem automática)</div>
+            <div class="title">Plano do Dia 05</div>
           </div>
           <table id="tPlano05">
             <thead>
@@ -400,9 +369,6 @@
             </thead>
             <tbody></tbody>
           </table>
-          <div class="note small">
-            O cronograma é uma referência: o foco é executar o <b>Plano do Dia 05</b> e manter o mercado sob controle.
-          </div>
         </div>
 
         <div class="hr"></div>
@@ -461,7 +427,7 @@
     return Math.max(min, Math.min(max, n));
   }
 
-  // ---------- Modelo ----------
+  // ---------- Model ----------
   const DEFAULT = {
     entradas: [
       { id: uid(), dia: 0,  nome: "Saldo inicial (dinheiro já em conta)", valor: 2400.80 },
@@ -470,16 +436,14 @@
       { id: uid(), dia: 20, nome: "Salário esposa (dia 20)", valor: 3000 }
     ],
     despesas: [
-      // Plano 05 - Blindagem
+      // Plano 05
       { id: uid(), dia: 5,  nome: "Blindagem — Mercado (05→15)", valor: 600,  ate15:false, tipo:"projeto", role:"blindagem", categoria:"blindagem" },
       { id: uid(), dia: 5,  nome: "Blindagem — Combustível (05→15)", valor: 300, ate15:false, tipo:"projeto", role:"blindagem", categoria:"blindagem" },
       { id: uid(), dia: 5,  nome: "Blindagem — Farmácia/Imprevisto (05→15)", valor: 200, ate15:false, tipo:"projeto", role:"blindagem", categoria:"blindagem" },
-
-      // Plano 05 - Quitações
       { id: uid(), dia: 5,  nome: "Agiota (Nicolas) — Quitação final", valor: 2675, ate15:false, tipo:"projeto", role:"agiota", categoria:"quitacao" },
       { id: uid(), dia: 5,  nome: "Escola — Dezembro em atraso (com juros)", valor: 1600, ate15:false, tipo:"projeto", role:"escolaDez", categoria:"escola" },
 
-      // Contas até dia 15 (azuis)
+      // Até dia 15
       { id: uid(), dia: 15, nome: "Denise (3/12)", valor: 331.62, ate15:true, tipo:"fixo", role:"nenhum", categoria:"conta" },
       { id: uid(), dia: 15, nome: "Condomínio", valor: 300, ate15:true, tipo:"fixo", role:"nenhum", categoria:"conta" },
       { id: uid(), dia: 15, nome: "Copel", valor: 347.68, ate15:true, tipo:"fixo", role:"nenhum", categoria:"conta" },
@@ -487,12 +451,12 @@
       { id: uid(), dia: 15, nome: "Internet 2 - Vivo", valor: 200, ate15:true, tipo:"fixo", role:"nenhum", categoria:"conta" },
       { id: uid(), dia: 15, nome: "Reginaldo Cartão", valor: 650, ate15:true, tipo:"fixo", role:"nenhum", categoria:"conta" },
 
-      // Orçamento mensal de mercado (R$/dia)
-      { id: uid(), dia: 30, nome: "Mercado (mês) — Orçamento", valor: 1200, ate15:false, tipo:"variavel", role:"nenhum", categoria:"mercado_mes" }
+      // Mercado (mês) para cálculo por dia
+      { id: uid(), dia: 30, nome: "Mercado (mês) — Orçamento", valor: 1200, ate15:false, tipo:"variavel", role:"nenhum", categoria:"mercado_mes" },
     ]
   };
 
-  const STORAGE_KEY = "simulador_financeiro_v3";
+  const STORAGE_KEY = "simulador_financeiro_v4";
   function load(){
     try{
       const raw = localStorage.getItem(STORAGE_KEY);
@@ -511,146 +475,147 @@
   function save(state){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
   let state = load();
 
-  // ---------- Render ----------
+  // ---------- DOM ----------
   const entradasList = document.getElementById("entradasList");
   const despesasList = document.getElementById("despesasList");
 
-  function moneyInputHTML({ id, k, value, placeholder }){
+  function moneyInputHTML({ id, k, value }){
     return `
       <div class="money">
         <span>R$</span>
-        <input data-money="1" data-k="${k}" data-id="${id}" inputmode="decimal"
-               value="${fmtInput(value)}" placeholder="${placeholder || '0,00'}" />
+        <input data-money="1" data-k="${k}" data-id="${id}" inputmode="decimal" value="${fmtInput(value)}" placeholder="0,00" />
       </div>
     `;
   }
 
-  function render(){
-    entradasList.innerHTML = "";
-    state.entradas
-      .sort((a,b)=>a.dia-b.dia)
-      .forEach(ent=>{
-        const el = document.createElement("div");
-        el.className = "item";
-        el.innerHTML = `
-          <div class="top">
-            <div>
-              <label>Nome</label>
-              <input data-k="nome" data-id="${ent.id}" value="${escapeHtml(ent.nome)}" />
-            </div>
-            <div>
-              <label>Dia</label>
-              <input data-k="dia" data-id="${ent.id}" inputmode="numeric" value="${ent.dia}" />
-            </div>
-            <div>
-              <label>Valor</label>
-              ${moneyInputHTML({id: ent.id, k:"valor", value: ent.valor})}
-            </div>
-            <div style="display:flex; justify-content:flex-end;">
-              <button class="btn danger" data-del-ent="${ent.id}">Remover</button>
-            </div>
-          </div>
-          <div class="chips">
-            <span class="chip good">Entrada</span>
-            ${ent.dia === 0 ? `<span class="chip warn">Base (saldo inicial)</span>` : ``}
-          </div>
-        `;
-        entradasList.appendChild(el);
-      });
-
-    despesasList.innerHTML = "";
-    state.despesas
-      .sort((a,b)=>a.dia-b.dia)
-      .forEach(dep=>{
-        const el = document.createElement("div");
-        el.className = "item";
-        el.innerHTML = `
-          <div class="top">
-            <div>
-              <label>Nome</label>
-              <input data-k="nome" data-id="${dep.id}" value="${escapeHtml(dep.nome)}" />
-            </div>
-            <div>
-              <label>Venc. (dia)</label>
-              <input data-k="dia" data-id="${dep.id}" inputmode="numeric" value="${dep.dia}" />
-            </div>
-            <div>
-              <label>Valor</label>
-              ${moneyInputHTML({id: dep.id, k:"valor", value: dep.valor})}
-            </div>
-            <div style="display:flex; justify-content:flex-end;">
-              <button class="btn danger" data-del-dep="${dep.id}">Remover</button>
-            </div>
-          </div>
-
-          <div class="row2">
-            <div>
-              <label>Tipo</label>
-              <select data-k="tipo" data-id="${dep.id}">
-                <option value="fixo" ${dep.tipo==="fixo"?"selected":""}>Fixo</option>
-                <option value="variavel" ${dep.tipo==="variavel"?"selected":""}>Variável</option>
-                <option value="projeto" ${dep.tipo==="projeto"?"selected":""}>Projeto (único)</option>
-              </select>
-            </div>
-            <div>
-              <label>Marca “Até dia 15” (azul)</label>
-              <select data-k="ate15" data-id="${dep.id}">
-                <option value="true" ${dep.ate15? "selected":""}>Sim</option>
-                <option value="false" ${!dep.ate15? "selected":""}>Não</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="row2">
-            <div>
-              <label>Uso no Plano 05</label>
-              <select data-k="role" data-id="${dep.id}">
-                <option value="nenhum" ${dep.role==="nenhum"?"selected":""}>Nenhum</option>
-                <option value="blindagem" ${dep.role==="blindagem"?"selected":""}>Blindagem</option>
-                <option value="agiota" ${dep.role==="agiota"?"selected":""}>Agiota</option>
-                <option value="escolaDez" ${dep.role==="escolaDez"?"selected":""}>Escola Dez</option>
-              </select>
-            </div>
-            <div>
-              <label>Categoria</label>
-              <select data-k="categoria" data-id="${dep.id}">
-                <option value="conta" ${dep.categoria==="conta"?"selected":""}>Conta</option>
-                <option value="mercado_mes" ${dep.categoria==="mercado_mes"?"selected":""}>Mercado (mês)</option>
-                <option value="blindagem" ${dep.categoria==="blindagem"?"selected":""}>Blindagem</option>
-                <option value="quitacao" ${dep.categoria==="quitacao"?"selected":""}>Quitação</option>
-                <option value="escola" ${dep.categoria==="escola"?"selected":""}>Escola</option>
-                <option value="outros" ${dep.categoria==="outros"?"selected":""}>Outros</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="chips">
-            ${dep.ate15 ? `<span class="chip blue">Até dia 15</span>` : `<span class="chip">Após 15</span>`}
-            ${dep.tipo==="fixo" ? `<span class="chip good">Fixo</span>` : dep.tipo==="variavel" ? `<span class="chip warn">Variável</span>` : `<span class="chip warn">Projeto</span>`}
-            ${dep.role==="blindagem" ? `<span class="chip blue">Plano 05: Blindagem</span>` : ``}
-            ${dep.role==="agiota" ? `<span class="chip bad">Plano 05: Agiota</span>` : ``}
-            ${dep.role==="escolaDez" ? `<span class="chip warn">Plano 05: Escola Dez</span>` : ``}
-            ${dep.categoria==="mercado_mes" ? `<span class="chip good">Mercado (mês)</span>` : ``}
-          </div>
-        `;
-        despesasList.appendChild(el);
-      });
-
-    attachMoneyAutoFormat();
-    simular();
+  function chipsForExpense(dep){
+    const chips = [];
+    chips.push(dep.ate15 ? `<span class="chip blue">Até dia 15</span>` : `<span class="chip">Após 15</span>`);
+    chips.push(dep.tipo==="fixo" ? `<span class="chip good">Fixo</span>` : dep.tipo==="variavel" ? `<span class="chip warn">Variável</span>` : `<span class="chip warn">Projeto</span>`);
+    if(dep.role==="blindagem") chips.push(`<span class="chip blue">Plano 05: Blindagem</span>`);
+    if(dep.role==="agiota") chips.push(`<span class="chip bad">Plano 05: Agiota</span>`);
+    if(dep.role==="escolaDez") chips.push(`<span class="chip warn">Plano 05: Escola Dez</span>`);
+    if(dep.categoria==="mercado_mes") chips.push(`<span class="chip good">Mercado (mês)</span>`);
+    return chips.join("");
   }
 
-  function attachMoneyAutoFormat(){
-    document.querySelectorAll('input[data-money="1"]').forEach(inp=>{
-      inp.addEventListener("blur", ()=>{
-        const n = parseBRL(inp.value);
-        inp.value = fmtInput(n);
-      }, { once:true });
+  function render(){
+    // Entradas
+    entradasList.innerHTML = "";
+    state.entradas.sort((a,b)=>a.dia-b.dia).forEach(ent=>{
+      const el = document.createElement("div");
+      el.className = "item";
+      el.innerHTML = `
+        <div class="fields">
+          <div class="field">
+            <label>Nome</label>
+            <input data-k="nome" data-id="${ent.id}" value="${escapeHtml(ent.nome)}" />
+          </div>
+
+          <div class="field day">
+            <label>Dia</label>
+            <input data-k="dia" data-id="${ent.id}" inputmode="numeric" value="${ent.dia}" />
+          </div>
+
+          <div class="field">
+            <label>Valor</label>
+            ${moneyInputHTML({id: ent.id, k:"valor", value: ent.valor})}
+          </div>
+
+          <div class="field actions">
+            <button class="btn danger" data-del-ent="${ent.id}">Remover</button>
+          </div>
+        </div>
+        <div class="chips">
+          <span class="chip good">Entrada</span>
+          ${ent.dia===0 ? `<span class="chip warn">Base (saldo inicial)</span>` : ``}
+        </div>
+      `;
+      entradasList.appendChild(el);
     });
+
+    // Despesas
+    despesasList.innerHTML = "";
+    state.despesas.sort((a,b)=>a.dia-b.dia).forEach(dep=>{
+      const el = document.createElement("div");
+      el.className = "item";
+      el.innerHTML = `
+        <div class="fields">
+          <div class="field">
+            <label>Nome</label>
+            <input data-k="nome" data-id="${dep.id}" value="${escapeHtml(dep.nome)}" />
+          </div>
+
+          <div class="field day">
+            <label>Venc. (dia)</label>
+            <input data-k="dia" data-id="${dep.id}" inputmode="numeric" value="${dep.dia}" />
+          </div>
+
+          <div class="field">
+            <label>Valor</label>
+            ${moneyInputHTML({id: dep.id, k:"valor", value: dep.valor})}
+          </div>
+
+          <div class="field actions">
+            <button class="btn danger" data-del-dep="${dep.id}">Remover</button>
+          </div>
+        </div>
+
+        <div class="row2">
+          <div>
+            <label>Tipo</label>
+            <select data-k="tipo" data-id="${dep.id}">
+              <option value="fixo" ${dep.tipo==="fixo"?"selected":""}>Fixo</option>
+              <option value="variavel" ${dep.tipo==="variavel"?"selected":""}>Variável</option>
+              <option value="projeto" ${dep.tipo==="projeto"?"selected":""}>Projeto (único)</option>
+            </select>
+          </div>
+          <div>
+            <label>Marca “Até dia 15” (azul)</label>
+            <select data-k="ate15" data-id="${dep.id}">
+              <option value="true" ${dep.ate15? "selected":""}>Sim</option>
+              <option value="false" ${!dep.ate15? "selected":""}>Não</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row2">
+          <div>
+            <label>Uso no Plano 05</label>
+            <select data-k="role" data-id="${dep.id}">
+              <option value="nenhum" ${dep.role==="nenhum"?"selected":""}>Nenhum</option>
+              <option value="blindagem" ${dep.role==="blindagem"?"selected":""}>Blindagem</option>
+              <option value="agiota" ${dep.role==="agiota"?"selected":""}>Agiota</option>
+              <option value="escolaDez" ${dep.role==="escolaDez"?"selected":""}>Escola Dez</option>
+            </select>
+          </div>
+          <div>
+            <label>Categoria</label>
+            <select data-k="categoria" data-id="${dep.id}">
+              <option value="conta" ${dep.categoria==="conta"?"selected":""}>Conta</option>
+              <option value="mercado_mes" ${dep.categoria==="mercado_mes"?"selected":""}>Mercado (mês)</option>
+              <option value="blindagem" ${dep.categoria==="blindagem"?"selected":""}>Blindagem</option>
+              <option value="quitacao" ${dep.categoria==="quitacao"?"selected":""}>Quitação</option>
+              <option value="escola" ${dep.categoria==="escola"?"selected":""}>Escola</option>
+              <option value="outros" ${dep.categoria==="outros"?"selected":""}>Outros</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="chips" id="chips-${dep.id}">
+          ${chipsForExpense(dep)}
+        </div>
+      `;
+      despesasList.appendChild(el);
+    });
+
+    // formata money no blur via delegação (sem perder clique)
+    simular(true);
   }
 
   // ---------- Events ----------
   function bind(){
+    // inputs (digitação) — SEM re-render
     document.body.addEventListener("input", (e)=>{
       const t = e.target;
       const id = t.getAttribute("data-id");
@@ -675,12 +640,14 @@
       simular(); save(state);
     });
 
+    // selects (mudança) — atualiza chips SEM re-render
     document.body.addEventListener("change",(e)=>{
       const t = e.target;
       const id = t.getAttribute("data-id");
       const k  = t.getAttribute("data-k");
       if(!id || !k) return;
 
+      // despesas
       const obj = state.despesas.find(x=>x.id===id);
       if(!obj) return;
 
@@ -689,41 +656,62 @@
       if(k==="role") obj.role = t.value;
       if(k==="categoria") obj.categoria = t.value;
 
+      // se virou parte do plano, não pode ser "até 15"
       if(obj.role !== "nenhum") obj.ate15 = false;
 
-      simular(); save(state); render(); // rerender para atualizar chips
+      // sincroniza selects "ate15" visualmente se foi desligado
+      if(obj.role !== "nenhum"){
+        const ate15Sel = document.querySelector(`select[data-id="${id}"][data-k="ate15"]`);
+        if(ate15Sel) ate15Sel.value = "false";
+      }
+
+      // atualiza chips em tempo real
+      const chipsEl = document.getElementById(`chips-${id}`);
+      if(chipsEl) chipsEl.innerHTML = chipsForExpense(obj);
+
+      simular(); save(state);
     });
 
+    // money formatting on blur (delegação) — não atrapalha clique
+    document.body.addEventListener("focusout", (e)=>{
+      const t = e.target;
+      if(t && t.matches && t.matches('input[data-money="1"]')){
+        const n = parseBRL(t.value);
+        t.value = fmtInput(n);
+      }
+    });
+
+    // remove
     document.body.addEventListener("click",(e)=>{
       const t = e.target;
       const delEnt = t.getAttribute("data-del-ent");
       const delDep = t.getAttribute("data-del-dep");
       if(delEnt){
         state.entradas = state.entradas.filter(x=>x.id!==delEnt);
-        render(); save(state);
+        save(state); render();
       }
       if(delDep){
         state.despesas = state.despesas.filter(x=>x.id!==delDep);
-        render(); save(state);
+        save(state); render();
       }
     });
 
+    // add
     document.getElementById("addEntrada").addEventListener("click",()=>{
       state.entradas.push({ id: uid(), dia: 5, nome:"Nova entrada", valor: 0 });
-      render(); save(state);
+      save(state); render();
     });
     document.getElementById("addDespesa").addEventListener("click",()=>{
       state.despesas.push({ id: uid(), dia: 30, nome:"Nova despesa", valor: 0, ate15:false, tipo:"variavel", role:"nenhum", categoria:"outros" });
-      render(); save(state);
+      save(state); render();
     });
 
-    document.getElementById("btnSimular").addEventListener("click", simular);
+    // toolbar
     document.getElementById("btnSalvar").addEventListener("click", ()=>{ save(state); toast("Salvo ✅"); });
     document.getElementById("btnReset").addEventListener("click", ()=>{
       if(!confirm("Resetar para os valores padrão?")) return;
       state = structuredClone(DEFAULT);
-      save(state);
-      render();
+      save(state); render();
       toast("Resetado ✅");
     });
     document.getElementById("btnExport").addEventListener("click", ()=>{
@@ -736,14 +724,12 @@
       URL.revokeObjectURL(url);
     });
 
-    window.addEventListener("resize", ()=>{
-      // redesenha mantendo responsivo
-      simular(true);
-    });
+    window.addEventListener("resize", ()=>simular(true));
   }
 
-  // ---------- Charts (Canvas) ----------
+  // ---------- Charts ----------
   const PIE_COLORS = ["#5db2ff","#31d07d","#ffd166","#ff5c7a","#b98bff","#60f2d8","#ffa6d1","#a3ff87"];
+
   function setupCanvas(canvas){
     const dpr = Math.max(1, window.devicePixelRatio || 1);
     const rect = canvas.getBoundingClientRect();
@@ -763,7 +749,7 @@
     const total = sum(data.map(d=>d.value));
     const cx = w/2, cy = h/2, r = Math.min(w,h)*0.34;
 
-    // background ring
+    // base
     ctx.beginPath();
     ctx.arc(cx, cy, r, 0, Math.PI*2);
     ctx.fillStyle = "rgba(255,255,255,.04)";
@@ -771,9 +757,9 @@
 
     if(total <= 0){
       ctx.fillStyle = "rgba(234,240,255,.65)";
-      ctx.font = "12px system-ui, -apple-system, Segoe UI, Roboto, Arial";
+      ctx.font = "12px system-ui";
       ctx.textAlign = "center";
-      ctx.fillText("Sem dados para o gráfico", cx, cy);
+      ctx.fillText("Sem dados", cx, cy);
       return;
     }
 
@@ -789,7 +775,7 @@
       angle += slice;
     });
 
-    // hole (donut)
+    // donut hole
     ctx.beginPath();
     ctx.arc(cx, cy, r*0.58, 0, Math.PI*2);
     ctx.fillStyle = "rgba(11,18,32,.92)";
@@ -797,7 +783,7 @@
 
     // center text
     ctx.fillStyle = "rgba(234,240,255,.9)";
-    ctx.font = "800 12px system-ui, -apple-system, Segoe UI, Roboto, Arial";
+    ctx.font = "800 12px system-ui";
     ctx.textAlign = "center";
     ctx.fillText("Total despesas", cx, cy-6);
 
@@ -810,50 +796,41 @@
     const { ctx, w, h } = setupCanvas(canvas);
     ctx.clearRect(0,0,w,h);
 
-    const padding = { l: 34, r: 14, t: 12, b: 34 };
-    const plotW = w - padding.l - padding.r;
-    const plotH = h - padding.t - padding.b;
+    const pad = { l: 34, r: 14, t: 12, b: 34 };
+    const plotW = w - pad.l - pad.r;
+    const plotH = h - pad.t - pad.b;
 
     const maxV = Math.max(1, ...data.map(d=>d.value));
-    // grid lines
+
     ctx.strokeStyle = "rgba(255,255,255,.08)";
     ctx.lineWidth = 1;
     for(let i=0;i<=4;i++){
-      const y = padding.t + (plotH*(i/4));
+      const y = pad.t + (plotH*(i/4));
       ctx.beginPath();
-      ctx.moveTo(padding.l, y);
-      ctx.lineTo(padding.l+plotW, y);
+      ctx.moveTo(pad.l, y);
+      ctx.lineTo(pad.l+plotW, y);
       ctx.stroke();
     }
 
     const n = data.length;
     const gap = 10;
-    const barW = Math.max(16, (plotW - gap*(n-1)) / n);
+    const barW = Math.max(18, (plotW - gap*(n-1)) / n);
 
     data.forEach((d,i)=>{
-      const x = padding.l + i*(barW+gap);
+      const x = pad.l + i*(barW+gap);
       const barH = (d.value/maxV) * plotH;
-      const y = padding.t + (plotH - barH);
+      const y = pad.t + (plotH - barH);
 
-      // bar
       ctx.fillStyle = d.color || PIE_COLORS[i%PIE_COLORS.length];
       ctx.globalAlpha = 0.92;
       ctx.fillRect(x, y, barW, barH);
       ctx.globalAlpha = 1;
 
-      // label
       ctx.fillStyle = "rgba(234,240,255,.75)";
-      ctx.font = "10px system-ui, -apple-system, Segoe UI, Roboto, Arial";
+      ctx.font = "10px system-ui";
       ctx.textAlign = "center";
-      ctx.fillText(d.short || d.label, x + barW/2, padding.t + plotH + 18);
+      ctx.fillText(d.short || d.label, x + barW/2, pad.t + plotH + 18);
     });
-
-    // y-axis min/max
-    ctx.fillStyle = "rgba(234,240,255,.55)";
-    ctx.font = "10px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace";
-    ctx.textAlign = "left";
-    ctx.fillText("0", 4, padding.t + plotH);
-    ctx.fillText(fmt(maxV), 4, padding.t + 10);
   }
 
   function renderLegend(el, data, total){
@@ -871,14 +848,15 @@
   }
 
   // ---------- Simulation ----------
-  function simular(fromResize=false){
-    const saldoInicial = sum(state.entradas.filter(x=>x.dia===0).map(x=>x.valor));
+  function simular(fromRender=false){
+    // KPIs
     const totalEntradas = sum(state.entradas.map(x=>x.valor));
     const totalDespesas = sum(state.despesas.map(x=>x.valor));
-
     document.getElementById("kpiEntradas").textContent = fmt(totalEntradas);
     document.getElementById("kpiDespesas").textContent = fmt(totalDespesas);
 
+    // disponível dia 05: dia 0 + entradas <= 05 (exceto dia 0)
+    const saldoInicial = sum(state.entradas.filter(x=>x.dia===0).map(x=>x.valor));
     const entradasAte05 = sum(state.entradas.filter(x=>x.dia>0 && x.dia<=5).map(x=>x.valor));
     const disponivel05 = saldoInicial + entradasAte05;
     document.getElementById("kpiDisponivel05").textContent = fmt(disponivel05);
@@ -894,25 +872,25 @@
     const escolaDezTotal = sum(escolaDez.map(x=>x.valor));
     const contasAte15Total = sum(contasAte15.map(x=>x.valor));
 
-    const planoSaidas = [
+    const plano = [
       { etapa:"1", nome:"Blindagem", desc:"Mercado + combustível + farmácia/imprevisto (05→15)", valor: blindTotal },
       { etapa:"2", nome:"Quitar agiota", desc:"Quitação final (encerra e pronto)", valor: agiotaTotal },
       { etapa:"3", nome:"Contas até dia 15", desc:"Despesas marcadas “Até dia 15”", valor: contasAte15Total },
       { etapa:"4", nome:"Escola (Dezembro)", desc:"Atraso de dezembro com juros", valor: escolaDezTotal },
     ];
-    const totalPlano05 = sum(planoSaidas.map(x=>x.valor));
+
+    const totalPlano05 = sum(plano.map(x=>x.valor));
     const sobra05 = disponivel05 - totalPlano05;
     document.getElementById("kpiSobra05").textContent = fmt(sobra05);
 
     // Mercado por dia
     const mercadoMes = sum(state.despesas.filter(x=>x.categoria==="mercado_mes").map(x=>x.valor));
-    const mercadoDia = mercadoMes / 30;
-    document.getElementById("kpiMercadoDia").textContent = `${fmt(mercadoDia)} / dia`;
+    document.getElementById("kpiMercadoDia").textContent = `${fmt(mercadoMes/30)} / dia`;
 
-    // Tabela plano 05
+    // tabela plano
     const tb = document.querySelector("#tPlano05 tbody");
     tb.innerHTML = "";
-    planoSaidas.forEach(x=>{
+    plano.forEach(x=>{
       const tr = document.createElement("tr");
       tr.innerHTML = `
         <td class="mono">${x.etapa}</td>
@@ -922,18 +900,13 @@
       tb.appendChild(tr);
     });
     const trTot = document.createElement("tr");
-    trTot.innerHTML = `
-      <td colspan="2"><b>Total do Plano do Dia 05</b></td>
-      <td class="r mono"><b>${fmt(totalPlano05)}</b></td>
-    `;
+    trTot.innerHTML = `<td colspan="2"><b>Total Plano 05</b></td><td class="r mono"><b>${fmt(totalPlano05)}</b></td>`;
     tb.appendChild(trTot);
 
     const msg = document.getElementById("msgPlano05");
-    if(sobra05 >= 0){
-      msg.innerHTML = `Status: <span class="ok">Plano viável</span>. Sobra após o dia 05: <span class="ok">${fmt(sobra05)}</span>.`;
-    }else{
-      msg.innerHTML = `Status: <span class="bad">Faltam ${fmt(Math.abs(sobra05))}</span> para fechar o Plano do Dia 05.`;
-    }
+    msg.innerHTML = sobra05 >= 0
+      ? `Status: <span class="ok">Plano viável</span>. Sobra: <span class="ok">${fmt(sobra05)}</span>.`
+      : `Status: <span class="bad">Faltam ${fmt(Math.abs(sobra05))}</span> para fechar o Plano 05.`;
 
     // Cronograma
     const entradasDia = d => sum(state.entradas.filter(x=>x.dia===d).map(x=>x.valor));
@@ -946,14 +919,14 @@
 
     const crTb = document.querySelector("#tCrono tbody");
     crTb.innerHTML = "";
-    crTb.appendChild(crRow("05", fmt(entradasAte05), `Executar Plano do Dia 05 (${fmt(totalPlano05)})`, fmt(saldoDepois05)));
-    crTb.appendChild(crRow("15", fmt(entradasDia(15)), `Sugestão: reforçar mercado + iniciar reserva`, fmt(saldoDepois15)));
-    crTb.appendChild(crRow("20", fmt(entradasDia(20)), `Pagar despesas após 15 (estimado ${fmt(totalApos15)})`, fmt(saldoDepois20)));
+    crTb.appendChild(crRow("05", fmt(entradasAte05), `Executar Plano 05 (${fmt(totalPlano05)})`, fmt(saldoDepois05)));
+    crTb.appendChild(crRow("15", fmt(entradasDia(15)), `Sugestão: reforço mercado + reserva`, fmt(saldoDepois15)));
+    crTb.appendChild(crRow("20", fmt(entradasDia(20)), `Despesas após 15 (est. ${fmt(totalApos15)})`, fmt(saldoDepois20)));
 
     // Fluxo
     const fluxo = [];
     state.entradas.forEach(e=> fluxo.push({dia:e.dia, tipo:"Entrada", nome:e.nome, valor:e.valor}));
-    planoSaidas.forEach(x=> fluxo.push({dia:5, tipo:"Saída", nome:`Plano 05 — ${x.nome}`, valor:-x.valor}));
+    plano.forEach(x=> fluxo.push({dia:5, tipo:"Saída", nome:`Plano 05 — ${x.nome}`, valor:-x.valor}));
     state.despesas.forEach(d=> fluxo.push({dia:d.dia, tipo:"Despesa", nome:d.nome + (d.ate15 ? " (até 15)" : ""), valor:-d.valor}));
     fluxo.sort((a,b)=>a.dia-b.dia);
 
@@ -971,29 +944,26 @@
       ftb.appendChild(tr);
     });
 
-    // ---------- Charts data ----------
-    // "Para onde o dinheiro vai" (base: despesas)
+    // Charts breakdown
     const outras = state.despesas.filter(d=>d.role==="nenhum" && !d.ate15 && d.categoria!=="mercado_mes");
     const outrasTotal = sum(outras.map(x=>x.valor));
-    const mercadoMesTotal = mercadoMes;
 
     const breakdown = [
-      { key:"blind", label:"Blindagem", short:"Blind.", value: blindTotal, color: PIE_COLORS[0] },
-      { key:"agiota", label:"Agiota", short:"Agiota", value: agiotaTotal, color: PIE_COLORS[3] },
-      { key:"escola", label:"Escola", short:"Escola", value: escolaDezTotal, color: PIE_COLORS[2] },
-      { key:"ate15", label:"Contas até 15", short:"Até15", value: contasAte15Total, color: PIE_COLORS[1] },
-      { key:"merc", label:"Mercado (mês)", short:"Merc.", value: mercadoMesTotal, color: PIE_COLORS[6] },
-      { key:"out", label:"Outras", short:"Outras", value: outrasTotal, color: PIE_COLORS[5] },
-    ].filter(x=>x.value > 0.000001); // remove zerados
+      { label:"Blindagem", short:"Blind.", value: blindTotal, color: PIE_COLORS[0] },
+      { label:"Agiota", short:"Agiota", value: agiotaTotal, color: PIE_COLORS[3] },
+      { label:"Escola", short:"Escola", value: escolaDezTotal, color: PIE_COLORS[2] },
+      { label:"Até 15", short:"Até15", value: contasAte15Total, color: PIE_COLORS[1] },
+      { label:"Mercado", short:"Merc.", value: mercadoMes, color: PIE_COLORS[6] },
+      { label:"Outras", short:"Outras", value: outrasTotal, color: PIE_COLORS[5] },
+    ].filter(x=>x.value > 0.000001);
 
     const totalBreak = sum(breakdown.map(x=>x.value));
+    document.getElementById("chartTotal").textContent = `Total despesas (grupos): ${fmt(totalBreak)}`;
     document.getElementById("pieTotal").textContent = `Total: ${fmt(totalBreak)}`;
     document.getElementById("barTotal").textContent = `Total: ${fmt(totalBreak)}`;
 
-    // Draw
     drawPie(document.getElementById("pieChart"), breakdown);
     drawBar(document.getElementById("barChart"), breakdown);
-
     renderLegend(document.getElementById("pieLegend"), breakdown, totalBreak);
     renderLegend(document.getElementById("barLegend"), breakdown, totalBreak);
 
