@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Simulador Financeiro (05/15/20) — Planejamento</title>
+  <title>Simulador Financeiro (05/15/20)</title>
   <style>
     :root{
       --bg:#0b1220;
@@ -16,7 +16,6 @@
       --warn:#ffd166;
       --bad:#ff5c7a;
       --blue:#5db2ff;
-      --chip:rgba(93,178,255,.14);
       --shadow: 0 14px 40px rgba(0,0,0,.28);
       --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
     }
@@ -30,7 +29,7 @@
                   linear-gradient(180deg, #070b14 0%, #0b1220 100%);
     }
     header{
-      padding:20px 16px;
+      padding:16px 16px;
       border-bottom: 1px solid var(--line);
       background: rgba(17,26,46,.55);
       backdrop-filter: blur(10px);
@@ -38,18 +37,28 @@
       top:0;
       z-index: 50;
     }
-    .wrap{ max-width: 1120px; margin: 0 auto; }
+    .wrap{ max-width: 1160px; margin: 0 auto; }
     h1{ margin:0; font-size: 18px; letter-spacing:.2px; }
-    .sub{ margin-top:6px; font-size: 12px; color:var(--muted); }
-    main{ padding: 18px 16px 44px; }
-    .grid{
-      display:grid;
-      grid-template-columns: 1.2fr .8fr;
-      gap:14px;
+    .sub{ margin-top:6px; font-size: 12px; color:var(--muted); line-height:1.35; }
+    .topbar{ display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
+    .btn{
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.06);
+      color:var(--txt);
+      padding:9px 11px;
+      border-radius: 10px;
+      font-size: 12px;
+      cursor:pointer;
     }
-    @media (max-width: 960px){
-      .grid{ grid-template-columns: 1fr; }
-    }
+    .btn:hover{ background: rgba(255,255,255,.10); }
+    .btn.primary{ background: rgba(93,178,255,.18); border-color: rgba(93,178,255,.35); }
+    .btn.danger{ background: rgba(255,92,122,.14); border-color: rgba(255,92,122,.35); }
+    .btn.good{ background: rgba(49,208,125,.14); border-color: rgba(49,208,125,.35); }
+
+    main{ padding: 16px 16px 44px; }
+    .grid{ display:grid; grid-template-columns: 1.15fr .85fr; gap:14px; align-items:start; }
+    @media (max-width: 980px){ .grid{ grid-template-columns: 1fr; } }
+
     .card{
       background: rgba(17,26,46,.65);
       border: 1px solid var(--line);
@@ -66,31 +75,24 @@
       gap:10px;
       background: rgba(15,23,48,.6);
     }
-    .title{ font-size: 13px; font-weight: 700; }
-    .tools{ display:flex; gap:8px; flex-wrap:wrap; }
-    .btn{
-      border: 1px solid var(--line);
-      background: rgba(255,255,255,.06);
-      color:var(--txt);
-      padding:8px 10px;
-      border-radius: 10px;
-      font-size: 12px;
-      cursor:pointer;
-    }
-    .btn:hover{ background: rgba(255,255,255,.10); }
-    .btn.primary{ background: rgba(93,178,255,.18); border-color: rgba(93,178,255,.35); }
-    .btn.danger{ background: rgba(255,92,122,.14); border-color: rgba(255,92,122,.35); }
-    .btn.good{ background: rgba(49,208,125,.14); border-color: rgba(49,208,125,.35); }
+    .title{ font-size: 13px; font-weight: 800; }
     .body{ padding: 12px 14px; }
-    .row{
+
+    .list{ display:flex; flex-direction:column; gap:10px; }
+    .item{
+      border: 1px solid var(--line);
+      background: rgba(0,0,0,.14);
+      border-radius: 12px;
+      padding:10px;
+    }
+    .item .top{
       display:grid;
-      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-columns: 1.5fr .6fr .9fr .6fr;
       gap:10px;
-      margin-bottom:10px;
+      align-items:end;
     }
-    @media (max-width: 720px){
-      .row{ grid-template-columns: 1fr; }
-    }
+    @media (max-width: 900px){ .item .top{ grid-template-columns: 1fr 1fr; } }
+
     label{ font-size: 11px; color:var(--muted); display:block; margin-bottom:6px; }
     input, select{
       width:100%;
@@ -102,27 +104,44 @@
       outline:none;
       font-size: 13px;
     }
-    input::placeholder{ color: rgba(234,240,255,.35); }
-    .list{
+
+    /* Campo dinheiro */
+    .money{
       display:flex;
-      flex-direction:column;
-      gap:10px;
-    }
-    .item{
+      align-items:center;
+      gap:8px;
+      width:100%;
+      padding:0;
+      border-radius: 10px;
       border: 1px solid var(--line);
-      background: rgba(0,0,0,.14);
-      border-radius: 12px;
-      padding:10px;
+      background: rgba(0,0,0,.18);
     }
-    .item .top{
-      display:grid;
-      grid-template-columns: 1.5fr .6fr .7fr .6fr;
-      gap:10px;
-      align-items:end;
+    .money span{
+      padding:10px 10px;
+      color: rgba(234,240,255,.78);
+      font-weight: 800;
+      font-size: 13px;
+      border-right: 1px solid var(--line);
+      background: rgba(255,255,255,.04);
+      border-top-left-radius: 10px;
+      border-bottom-left-radius: 10px;
+      user-select:none;
+      white-space:nowrap;
     }
-    @media (max-width: 900px){
-      .item .top{ grid-template-columns: 1fr 1fr; }
+    .money input{
+      border:0;
+      background: transparent;
+      padding:10px 10px;
+      font-family: var(--mono);
+      font-size: 14px;
+      text-align:right;
+      min-width: 140px;
     }
+    .money input::placeholder{ color: rgba(234,240,255,.35); }
+
+    .row2{ display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:10px; }
+    @media (max-width: 720px){ .row2{ grid-template-columns: 1fr; } }
+
     .chips{ display:flex; gap:6px; flex-wrap:wrap; margin-top:8px; }
     .chip{
       font-size: 11px;
@@ -137,11 +156,7 @@
     .chip.warn{ background: rgba(255,209,102,.14); color: #fff0c7; border-color: rgba(255,209,102,.35); }
     .chip.bad{ background: rgba(255,92,122,.14); color: #ffd0db; border-color: rgba(255,92,122,.35); }
 
-    .kpis{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:10px;
-    }
+    .kpis{ display:grid; grid-template-columns: 1fr 1fr; gap:10px; }
     .kpi{
       border:1px solid var(--line);
       background: rgba(0,0,0,.14);
@@ -149,8 +164,8 @@
       padding:10px;
     }
     .kpi .l{ font-size: 11px; color: var(--muted); }
-    .kpi .v{ font-size: 16px; font-weight: 800; margin-top:4px; }
-    .kpi .h{ font-size: 11px; color: var(--muted); margin-top:6px; }
+    .kpi .v{ font-size: 16px; font-weight: 900; margin-top:4px; }
+    .kpi .h{ font-size: 11px; color: var(--muted); margin-top:6px; line-height:1.35; }
 
     table{
       width:100%;
@@ -163,79 +178,98 @@
       border-bottom:1px solid var(--line);
       vertical-align:top;
     }
-    th{ text-align:left; color:var(--muted); font-weight:700; }
+    th{ text-align:left; color:var(--muted); font-weight:800; }
     td.r, th.r{ text-align:right; white-space:nowrap; }
     .mono{ font-family: var(--mono); }
-    .note{
-      margin-top:10px;
-      font-size: 12px;
-      color: var(--muted);
-      line-height: 1.45;
-    }
-    .ok{ color: var(--good); font-weight: 800; }
-    .warn{ color: var(--warn); font-weight: 800; }
-    .bad{ color: var(--bad); font-weight: 800; }
-    .hr{
-      height:1px; background: var(--line);
-      margin: 12px 0;
-    }
+
+    .note{ margin-top:10px; font-size: 12px; color: var(--muted); line-height: 1.45; }
+    .ok{ color: var(--good); font-weight: 900; }
+    .bad{ color: var(--bad); font-weight: 900; }
+    .hr{ height:1px; background: var(--line); margin: 12px 0; }
     .small{ font-size: 11px; color: var(--muted); }
+
+    /* Charts */
+    .charts{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px;
+      margin-top:10px;
+    }
+    @media (max-width: 720px){ .charts{ grid-template-columns: 1fr; } }
+    .chartBox{
+      border:1px solid var(--line);
+      background: rgba(0,0,0,.14);
+      border-radius: 12px;
+      padding:10px;
+    }
+    .chartTitle{
+      display:flex; align-items:center; justify-content:space-between;
+      gap:10px;
+      font-size: 12px;
+      font-weight: 900;
+      margin-bottom:8px;
+    }
+    canvas{
+      width:100%;
+      height:240px;
+      display:block;
+      border-radius: 10px;
+      background: rgba(255,255,255,.03);
+      border: 1px solid rgba(255,255,255,.06);
+    }
+    .legend{
+      margin-top:8px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+    }
+    .legItem{
+      display:flex;
+      align-items:center;
+      gap:6px;
+      font-size: 11px;
+      color: var(--muted);
+      border: 1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.04);
+      padding: 5px 8px;
+      border-radius: 999px;
+    }
+    .swatch{
+      width:10px; height:10px; border-radius: 3px;
+      border:1px solid rgba(255,255,255,.12);
+    }
   </style>
 </head>
 <body>
 <header>
   <div class="wrap">
     <h1>Simulador Financeiro (Ciclo 05 / 15 / 20)</h1>
-    <div class="sub">Edite entradas e despesas, rode simulações e use o “Plano do Dia 05” (Blindagem → Agiota → Contas até 15 → Escola Dezembro). Tudo fica salvo neste navegador.</div>
+    <div class="sub">
+      Edite <b>Entradas</b> e <b>Despesas</b>. Marque despesas “Até dia 15” (azul).
+      Use “Uso no Plano 05” para: <b>Blindagem</b>, <b>Agiota</b>, <b>Escola Dez</b>.
+      O simulador calcula o <b>Plano do Dia 05</b>, <b>Mercado por dia</b> e mostra gráficos de <b>para onde o dinheiro vai</b>.
+    </div>
+
+    <div class="topbar">
+      <button class="btn primary" id="btnSimular">Simular</button>
+      <button class="btn" id="btnSalvar">Salvar</button>
+      <button class="btn danger" id="btnReset">Reset (padrão)</button>
+      <button class="btn" id="btnExport">Exportar JSON</button>
+    </div>
   </div>
 </header>
 
 <main class="wrap">
   <div class="grid">
-    <!-- ESQUERDA: CONFIG + LISTAS -->
+    <!-- ESQUERDA -->
     <div class="card">
       <div class="hd">
-        <div class="title">1) Configuração & Dados</div>
-        <div class="tools">
-          <button class="btn primary" id="btnSimular">Simular</button>
-          <button class="btn" id="btnSalvar">Salvar</button>
-          <button class="btn danger" id="btnReset">Reset (padrão)</button>
-        </div>
+        <div class="title">Entradas & Despesas</div>
+        <div class="small">Tudo editável — valores em Reais (R$)</div>
       </div>
 
       <div class="body">
-        <div class="row">
-          <div>
-            <label>Saldo atual (antes do dia 05)</label>
-            <input id="saldoAtual" type="text" inputmode="decimal" placeholder="Ex.: 2400,80" />
-          </div>
-          <div>
-            <label>Blindagem (Mercado 05→15)</label>
-            <input id="blindMercado" type="text" inputmode="decimal" placeholder="Ex.: 600,00" />
-          </div>
-          <div>
-            <label>Blindagem (Combustível 05→15)</label>
-            <input id="blindComb" type="text" inputmode="decimal" placeholder="Ex.: 300,00" />
-          </div>
-        </div>
-        <div class="row">
-          <div>
-            <label>Blindagem (Farmácia/Imprevisto 05→15)</label>
-            <input id="blindFarm" type="text" inputmode="decimal" placeholder="Ex.: 200,00" />
-          </div>
-          <div>
-            <label>Agiota (quitação final)</label>
-            <input id="agiotaQuit" type="text" inputmode="decimal" placeholder="Ex.: 2675,00" />
-          </div>
-          <div>
-            <label>Escola Dezembro (atraso com juros)</label>
-            <input id="escolaDez" type="text" inputmode="decimal" placeholder="Ex.: 1600,00" />
-          </div>
-        </div>
-
-        <div class="hr"></div>
-
-        <div class="grid" style="grid-template-columns: 1fr 1fr;">
+        <div class="row2">
           <div class="card" style="box-shadow:none;">
             <div class="hd" style="border:none; background:transparent; padding:0 0 10px 0;">
               <div class="title">Entradas (inflows)</div>
@@ -244,6 +278,9 @@
               </div>
             </div>
             <div class="list" id="entradasList"></div>
+            <div class="note">
+              Use uma entrada <b>“Saldo inicial”</b> com <b>dia 0</b> para simular o dinheiro que já está na conta.
+            </div>
           </div>
 
           <div class="card" style="box-shadow:none;">
@@ -254,46 +291,85 @@
               </div>
             </div>
             <div class="list" id="despesasList"></div>
+            <div class="note">
+              <span class="chip blue">Até dia 15</span> = contas que precisam estar pagas até 15.<br/>
+              “Uso no Plano 05”: <b>Blindagem</b> (mercado/combustível/farmácia), <b>Agiota</b>, <b>Escola Dez</b>.
+            </div>
           </div>
-        </div>
-
-        <div class="note">
-          <span class="chip blue">Até dia 15</span> marque despesas que vencem até 15 (as “azuis”).<br/>
-          <span class="chip warn">Projeto</span> use para coisas “fora do mensal” (ex.: quitar algo, compra única, etc.).<br/>
-          <span class="chip good">Fixo</span> para contas recorrentes.
         </div>
       </div>
     </div>
 
-    <!-- DIREITA: RESULTADOS -->
+    <!-- DIREITA -->
     <div class="card">
       <div class="hd">
-        <div class="title">2) Resultados da Simulação</div>
-        <div class="tools">
-          <button class="btn" id="btnExport">Exportar JSON</button>
-        </div>
+        <div class="title">Resultados</div>
+        <div class="small">Cálculo automático</div>
       </div>
       <div class="body">
         <div class="kpis">
           <div class="kpi">
-            <div class="l">Total de entradas no mês</div>
+            <div class="l">Total de entradas (mês)</div>
             <div class="v" id="kpiEntradas">—</div>
             <div class="h">Somatório de todas as entradas cadastradas</div>
           </div>
           <div class="kpi">
-            <div class="l">Total de despesas no mês</div>
+            <div class="l">Total de despesas (mês)</div>
             <div class="v" id="kpiDespesas">—</div>
             <div class="h">Somatório de todas as despesas cadastradas</div>
           </div>
+
           <div class="kpi">
-            <div class="l">Disponível no dia 05 (saldo + entradas até 05)</div>
+            <div class="l">Disponível no dia 05 (dia 0 + entradas ≤ 05)</div>
             <div class="v" id="kpiDisponivel05">—</div>
-            <div class="h">Base para executar o plano do dia 05</div>
+            <div class="h">Base para executar o Plano do Dia 05</div>
           </div>
           <div class="kpi">
             <div class="l">Sobra após Plano do Dia 05</div>
             <div class="v" id="kpiSobra05">—</div>
             <div class="h">Após blindagem + agiota + contas até 15 + escola dez</div>
+          </div>
+
+          <div class="kpi" style="grid-column: 1 / -1;">
+            <div class="l">Quanto posso gastar por dia no mercado (comida)</div>
+            <div class="v" id="kpiMercadoDia">—</div>
+            <div class="h">
+              Considerando <b>30 dias</b>. O valor vem da soma das despesas com <b>Categoria = Mercado (mês)</b>.
+              Ex.: R$ 1.200/mês → R$ 40/dia.
+            </div>
+          </div>
+        </div>
+
+        <div class="hr"></div>
+
+        <div class="card" style="box-shadow:none;">
+          <div class="hd" style="border:none; background:transparent; padding:0 0 8px 0;">
+            <div class="title">Para onde o dinheiro vai (gráficos)</div>
+            <div class="small">Baseado nas despesas cadastradas</div>
+          </div>
+
+          <div class="charts">
+            <div class="chartBox">
+              <div class="chartTitle">
+                <span>Pizza (Distribuição)</span>
+                <span class="small" id="pieTotal">—</span>
+              </div>
+              <canvas id="pieChart"></canvas>
+              <div class="legend" id="pieLegend"></div>
+            </div>
+
+            <div class="chartBox">
+              <div class="chartTitle">
+                <span>Colunas (Comparação)</span>
+                <span class="small" id="barTotal">—</span>
+              </div>
+              <canvas id="barChart"></canvas>
+              <div class="legend" id="barLegend"></div>
+            </div>
+          </div>
+
+          <div class="note small">
+            Grupos: <b>Blindagem</b>, <b>Agiota</b>, <b>Escola</b>, <b>Contas até 15</b>, <b>Mercado (mês)</b>, <b>Outras despesas</b>.
           </div>
         </div>
 
@@ -324,7 +400,9 @@
             </thead>
             <tbody></tbody>
           </table>
-          <div class="note small">Observação: o cronograma é uma sugestão baseada no seu “plano do dia 05” e nas despesas marcadas “até dia 15”. Ajuste vencimentos conforme sua realidade.</div>
+          <div class="note small">
+            O cronograma é uma referência: o foco é executar o <b>Plano do Dia 05</b> e manter o mercado sob controle.
+          </div>
         </div>
 
         <div class="hr"></div>
@@ -344,10 +422,6 @@
       </div>
     </div>
   </div>
-
-  <p class="note" style="margin-top:14px;">
-    <b>Dica GitHub Pages:</b> suba este arquivo como <span class="mono">index.html</span> no repositório → Settings → Pages → Deploy from branch → main / root.
-  </p>
 </main>
 
 <script>
@@ -357,7 +431,6 @@
   function parseBRL(str){
     if (typeof str === 'number') return str;
     if (!str) return 0;
-    // aceita "2.400,80" ou "2400,80" ou "2400.80"
     const cleaned = String(str)
       .trim()
       .replace(/\s/g,'')
@@ -368,73 +441,91 @@
     return isFinite(n) ? n : 0;
   }
   function fmt(n){ return BRL.format(Number(n||0)); }
-
+  function fmtInput(n){
+    const v = Number(n||0);
+    return v.toLocaleString('pt-BR', { minimumFractionDigits:2, maximumFractionDigits:2 });
+  }
   function uid(){ return Math.random().toString(36).slice(2,9); }
+  function sum(arr){ return arr.reduce((a,b)=>a+(Number(b)||0),0); }
+  function escapeHtml(s){
+    return String(s ?? "")
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  }
+  function clampInt(v, min, max){
+    let n = parseInt(v || "0",10);
+    if(!isFinite(n)) n = min;
+    return Math.max(min, Math.min(max, n));
+  }
 
   // ---------- Modelo ----------
   const DEFAULT = {
-    saldoAtual: 2400.80,
-    blindagem: { mercado: 600, combustivel: 300, farmacia: 200 },
-    agiotaQuit: 2675,
-    escolaDez: 1600,
     entradas: [
+      { id: uid(), dia: 0,  nome: "Saldo inicial (dinheiro já em conta)", valor: 2400.80 },
       { id: uid(), dia: 5,  nome: "Salário + comissão (dia 05)", valor: 6180 },
       { id: uid(), dia: 15, nome: "Antecipação (dia 15)", valor: 1120 },
       { id: uid(), dia: 20, nome: "Salário esposa (dia 20)", valor: 3000 }
     ],
     despesas: [
-      { id: uid(), dia: 15, nome: "Denise (3/12)", valor: 331.62, ate15: true, tipo: "fixo" },
-      { id: uid(), dia: 15, nome: "Condomínio", valor: 300, ate15: true, tipo: "fixo" },
-      { id: uid(), dia: 15, nome: "Copel", valor: 347.68, ate15: true, tipo: "fixo" },
-      { id: uid(), dia: 15, nome: "Internet 1 - Claro", valor: 149.90, ate15: true, tipo: "fixo" },
-      { id: uid(), dia: 15, nome: "Internet 2 - Vivo", valor: 200, ate15: true, tipo: "fixo" },
-      { id: uid(), dia: 15, nome: "Reginaldo Cartão", valor: 650, ate15: true, tipo: "fixo" },
+      // Plano 05 - Blindagem
+      { id: uid(), dia: 5,  nome: "Blindagem — Mercado (05→15)", valor: 600,  ate15:false, tipo:"projeto", role:"blindagem", categoria:"blindagem" },
+      { id: uid(), dia: 5,  nome: "Blindagem — Combustível (05→15)", valor: 300, ate15:false, tipo:"projeto", role:"blindagem", categoria:"blindagem" },
+      { id: uid(), dia: 5,  nome: "Blindagem — Farmácia/Imprevisto (05→15)", valor: 200, ate15:false, tipo:"projeto", role:"blindagem", categoria:"blindagem" },
 
-      { id: uid(), dia: 30, nome: "Psicóloga", valor: 100, ate15: false, tipo: "fixo" },
-      { id: uid(), dia: 30, nome: "Hortfruit", valor: 150, ate15: false, tipo: "variavel" },
-      { id: uid(), dia: 30, nome: "Mercado (mês)", valor: 1200, ate15: false, tipo: "variavel" },
-      { id: uid(), dia: 30, nome: "Combustível (mês)", valor: 300, ate15: false, tipo: "variavel" },
-      { id: uid(), dia: 30, nome: "Farmácia (mês)", valor: 270, ate15: false, tipo: "variavel" }
+      // Plano 05 - Quitações
+      { id: uid(), dia: 5,  nome: "Agiota (Nicolas) — Quitação final", valor: 2675, ate15:false, tipo:"projeto", role:"agiota", categoria:"quitacao" },
+      { id: uid(), dia: 5,  nome: "Escola — Dezembro em atraso (com juros)", valor: 1600, ate15:false, tipo:"projeto", role:"escolaDez", categoria:"escola" },
+
+      // Contas até dia 15 (azuis)
+      { id: uid(), dia: 15, nome: "Denise (3/12)", valor: 331.62, ate15:true, tipo:"fixo", role:"nenhum", categoria:"conta" },
+      { id: uid(), dia: 15, nome: "Condomínio", valor: 300, ate15:true, tipo:"fixo", role:"nenhum", categoria:"conta" },
+      { id: uid(), dia: 15, nome: "Copel", valor: 347.68, ate15:true, tipo:"fixo", role:"nenhum", categoria:"conta" },
+      { id: uid(), dia: 15, nome: "Internet 1 - Claro", valor: 149.90, ate15:true, tipo:"fixo", role:"nenhum", categoria:"conta" },
+      { id: uid(), dia: 15, nome: "Internet 2 - Vivo", valor: 200, ate15:true, tipo:"fixo", role:"nenhum", categoria:"conta" },
+      { id: uid(), dia: 15, nome: "Reginaldo Cartão", valor: 650, ate15:true, tipo:"fixo", role:"nenhum", categoria:"conta" },
+
+      // Orçamento mensal de mercado (R$/dia)
+      { id: uid(), dia: 30, nome: "Mercado (mês) — Orçamento", valor: 1200, ate15:false, tipo:"variavel", role:"nenhum", categoria:"mercado_mes" }
     ]
   };
 
-  const STORAGE_KEY = "simulador_financeiro_v1";
-
+  const STORAGE_KEY = "simulador_financeiro_v3";
   function load(){
     try{
       const raw = localStorage.getItem(STORAGE_KEY);
       if(!raw) return structuredClone(DEFAULT);
       const obj = JSON.parse(raw);
-      // fallback em campos
       return {
         ...structuredClone(DEFAULT),
         ...obj,
-        blindagem: { ...structuredClone(DEFAULT.blindagem), ...(obj.blindagem||{}) }
+        entradas: Array.isArray(obj.entradas) ? obj.entradas : structuredClone(DEFAULT.entradas),
+        despesas: Array.isArray(obj.despesas) ? obj.despesas : structuredClone(DEFAULT.despesas),
       };
     }catch(e){
       return structuredClone(DEFAULT);
     }
   }
-  function save(state){
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-  }
-
+  function save(state){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
   let state = load();
 
-  // ---------- Render Lists ----------
+  // ---------- Render ----------
   const entradasList = document.getElementById("entradasList");
   const despesasList = document.getElementById("despesasList");
 
-  function render(){
-    // top config
-    document.getElementById("saldoAtual").value = state.saldoAtual.toFixed(2).replace('.',',');
-    document.getElementById("blindMercado").value = state.blindagem.mercado.toFixed(2).replace('.',',');
-    document.getElementById("blindComb").value = state.blindagem.combustivel.toFixed(2).replace('.',',');
-    document.getElementById("blindFarm").value = state.blindagem.farmacia.toFixed(2).replace('.',',');
-    document.getElementById("agiotaQuit").value = state.agiotaQuit.toFixed(2).replace('.',',');
-    document.getElementById("escolaDez").value = state.escolaDez.toFixed(2).replace('.',',');
+  function moneyInputHTML({ id, k, value, placeholder }){
+    return `
+      <div class="money">
+        <span>R$</span>
+        <input data-money="1" data-k="${k}" data-id="${id}" inputmode="decimal"
+               value="${fmtInput(value)}" placeholder="${placeholder || '0,00'}" />
+      </div>
+    `;
+  }
 
-    // entradas
+  function render(){
     entradasList.innerHTML = "";
     state.entradas
       .sort((a,b)=>a.dia-b.dia)
@@ -453,7 +544,7 @@
             </div>
             <div>
               <label>Valor</label>
-              <input data-k="valor" data-id="${ent.id}" inputmode="decimal" value="${ent.valor.toFixed(2).replace('.',',')}" />
+              ${moneyInputHTML({id: ent.id, k:"valor", value: ent.valor})}
             </div>
             <div style="display:flex; justify-content:flex-end;">
               <button class="btn danger" data-del-ent="${ent.id}">Remover</button>
@@ -461,12 +552,12 @@
           </div>
           <div class="chips">
             <span class="chip good">Entrada</span>
+            ${ent.dia === 0 ? `<span class="chip warn">Base (saldo inicial)</span>` : ``}
           </div>
         `;
         entradasList.appendChild(el);
       });
 
-    // despesas
     despesasList.innerHTML = "";
     state.despesas
       .sort((a,b)=>a.dia-b.dia)
@@ -485,14 +576,14 @@
             </div>
             <div>
               <label>Valor</label>
-              <input data-k="valor" data-id="${dep.id}" inputmode="decimal" value="${dep.valor.toFixed(2).replace('.',',')}" />
+              ${moneyInputHTML({id: dep.id, k:"valor", value: dep.valor})}
             </div>
             <div style="display:flex; justify-content:flex-end;">
               <button class="btn danger" data-del-dep="${dep.id}">Remover</button>
             </div>
           </div>
 
-          <div class="row" style="grid-template-columns: 1fr 1fr; margin-top:10px;">
+          <div class="row2">
             <div>
               <label>Tipo</label>
               <select data-k="tipo" data-id="${dep.id}">
@@ -510,66 +601,84 @@
             </div>
           </div>
 
+          <div class="row2">
+            <div>
+              <label>Uso no Plano 05</label>
+              <select data-k="role" data-id="${dep.id}">
+                <option value="nenhum" ${dep.role==="nenhum"?"selected":""}>Nenhum</option>
+                <option value="blindagem" ${dep.role==="blindagem"?"selected":""}>Blindagem</option>
+                <option value="agiota" ${dep.role==="agiota"?"selected":""}>Agiota</option>
+                <option value="escolaDez" ${dep.role==="escolaDez"?"selected":""}>Escola Dez</option>
+              </select>
+            </div>
+            <div>
+              <label>Categoria</label>
+              <select data-k="categoria" data-id="${dep.id}">
+                <option value="conta" ${dep.categoria==="conta"?"selected":""}>Conta</option>
+                <option value="mercado_mes" ${dep.categoria==="mercado_mes"?"selected":""}>Mercado (mês)</option>
+                <option value="blindagem" ${dep.categoria==="blindagem"?"selected":""}>Blindagem</option>
+                <option value="quitacao" ${dep.categoria==="quitacao"?"selected":""}>Quitação</option>
+                <option value="escola" ${dep.categoria==="escola"?"selected":""}>Escola</option>
+                <option value="outros" ${dep.categoria==="outros"?"selected":""}>Outros</option>
+              </select>
+            </div>
+          </div>
+
           <div class="chips">
             ${dep.ate15 ? `<span class="chip blue">Até dia 15</span>` : `<span class="chip">Após 15</span>`}
             ${dep.tipo==="fixo" ? `<span class="chip good">Fixo</span>` : dep.tipo==="variavel" ? `<span class="chip warn">Variável</span>` : `<span class="chip warn">Projeto</span>`}
+            ${dep.role==="blindagem" ? `<span class="chip blue">Plano 05: Blindagem</span>` : ``}
+            ${dep.role==="agiota" ? `<span class="chip bad">Plano 05: Agiota</span>` : ``}
+            ${dep.role==="escolaDez" ? `<span class="chip warn">Plano 05: Escola Dez</span>` : ``}
+            ${dep.categoria==="mercado_mes" ? `<span class="chip good">Mercado (mês)</span>` : ``}
           </div>
         `;
         despesasList.appendChild(el);
       });
 
-    simular(); // atualiza resultados ao render
+    attachMoneyAutoFormat();
+    simular();
   }
 
-  function escapeHtml(s){
-    return String(s ?? "")
-      .replaceAll("&","&amp;")
-      .replaceAll("<","&lt;")
-      .replaceAll(">","&gt;")
-      .replaceAll('"',"&quot;")
-      .replaceAll("'","&#039;");
-  }
-
-  // ---------- Bind Inputs ----------
-  function bind(){
-    // config inputs
-    ["saldoAtual","blindMercado","blindComb","blindFarm","agiotaQuit","escolaDez"].forEach(id=>{
-      document.getElementById(id).addEventListener("input", ()=>{
-        state.saldoAtual = parseBRL(document.getElementById("saldoAtual").value);
-        state.blindagem.mercado = parseBRL(document.getElementById("blindMercado").value);
-        state.blindagem.combustivel = parseBRL(document.getElementById("blindComb").value);
-        state.blindagem.farmacia = parseBRL(document.getElementById("blindFarm").value);
-        state.agiotaQuit = parseBRL(document.getElementById("agiotaQuit").value);
-        state.escolaDez = parseBRL(document.getElementById("escolaDez").value);
-        simular();
-      });
+  function attachMoneyAutoFormat(){
+    document.querySelectorAll('input[data-money="1"]').forEach(inp=>{
+      inp.addEventListener("blur", ()=>{
+        const n = parseBRL(inp.value);
+        inp.value = fmtInput(n);
+      }, { once:true });
     });
+  }
 
-    // list changes (event delegation)
+  // ---------- Events ----------
+  function bind(){
     document.body.addEventListener("input", (e)=>{
       const t = e.target;
       const id = t.getAttribute("data-id");
-      const k = t.getAttribute("data-k");
+      const k  = t.getAttribute("data-k");
       if(!id || !k) return;
 
-      let arr = state.entradas.find(x=>x.id===id) ? state.entradas : state.despesas;
-      let obj = arr.find(x=>x.id===id);
+      let obj = state.entradas.find(x=>x.id===id);
+      if(obj){
+        if(k==="dia") obj.dia = clampInt(t.value, 0, 31);
+        else if(k==="valor") obj.valor = parseBRL(t.value);
+        else if(k==="nome") obj.nome = t.value;
+        simular(); save(state); return;
+      }
+
+      obj = state.despesas.find(x=>x.id===id);
       if(!obj) return;
 
-      if(k==="dia"){
-        obj.dia = Math.max(1, Math.min(31, parseInt(t.value || "0",10) || 0));
-      } else if(k==="valor"){
-        obj.valor = parseBRL(t.value);
-      } else if(k==="nome"){
-        obj.nome = t.value;
-      }
-      simular();
+      if(k==="dia") obj.dia = clampInt(t.value, 1, 31);
+      else if(k==="valor") obj.valor = parseBRL(t.value);
+      else if(k==="nome") obj.nome = t.value;
+
+      simular(); save(state);
     });
 
     document.body.addEventListener("change",(e)=>{
       const t = e.target;
       const id = t.getAttribute("data-id");
-      const k = t.getAttribute("data-k");
+      const k  = t.getAttribute("data-k");
       if(!id || !k) return;
 
       const obj = state.despesas.find(x=>x.id===id);
@@ -577,40 +686,39 @@
 
       if(k==="tipo") obj.tipo = t.value;
       if(k==="ate15") obj.ate15 = (t.value === "true");
-      simular();
+      if(k==="role") obj.role = t.value;
+      if(k==="categoria") obj.categoria = t.value;
+
+      if(obj.role !== "nenhum") obj.ate15 = false;
+
+      simular(); save(state); render(); // rerender para atualizar chips
     });
 
-    // delete buttons
     document.body.addEventListener("click",(e)=>{
       const t = e.target;
       const delEnt = t.getAttribute("data-del-ent");
       const delDep = t.getAttribute("data-del-dep");
       if(delEnt){
         state.entradas = state.entradas.filter(x=>x.id!==delEnt);
-        render();
+        render(); save(state);
       }
       if(delDep){
         state.despesas = state.despesas.filter(x=>x.id!==delDep);
-        render();
+        render(); save(state);
       }
     });
 
-    // add
     document.getElementById("addEntrada").addEventListener("click",()=>{
       state.entradas.push({ id: uid(), dia: 5, nome:"Nova entrada", valor: 0 });
-      render();
+      render(); save(state);
     });
     document.getElementById("addDespesa").addEventListener("click",()=>{
-      state.despesas.push({ id: uid(), dia: 30, nome:"Nova despesa", valor: 0, ate15:false, tipo:"variavel" });
-      render();
+      state.despesas.push({ id: uid(), dia: 30, nome:"Nova despesa", valor: 0, ate15:false, tipo:"variavel", role:"nenhum", categoria:"outros" });
+      render(); save(state);
     });
 
-    // actions
     document.getElementById("btnSimular").addEventListener("click", simular);
-    document.getElementById("btnSalvar").addEventListener("click", ()=>{
-      save(state);
-      toast("Salvo neste navegador ✅");
-    });
+    document.getElementById("btnSalvar").addEventListener("click", ()=>{ save(state); toast("Salvo ✅"); });
     document.getElementById("btnReset").addEventListener("click", ()=>{
       if(!confirm("Resetar para os valores padrão?")) return;
       state = structuredClone(DEFAULT);
@@ -618,7 +726,6 @@
       render();
       toast("Resetado ✅");
     });
-
     document.getElementById("btnExport").addEventListener("click", ()=>{
       const blob = new Blob([JSON.stringify(state,null,2)], {type:"application/json"});
       const url = URL.createObjectURL(blob);
@@ -628,46 +735,181 @@
       a.click();
       URL.revokeObjectURL(url);
     });
+
+    window.addEventListener("resize", ()=>{
+      // redesenha mantendo responsivo
+      simular(true);
+    });
+  }
+
+  // ---------- Charts (Canvas) ----------
+  const PIE_COLORS = ["#5db2ff","#31d07d","#ffd166","#ff5c7a","#b98bff","#60f2d8","#ffa6d1","#a3ff87"];
+  function setupCanvas(canvas){
+    const dpr = Math.max(1, window.devicePixelRatio || 1);
+    const rect = canvas.getBoundingClientRect();
+    const w = Math.max(280, rect.width);
+    const h = rect.height || 240;
+    canvas.width = Math.floor(w * dpr);
+    canvas.height = Math.floor(h * dpr);
+    const ctx = canvas.getContext("2d");
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    return { ctx, w, h };
+  }
+
+  function drawPie(canvas, data){
+    const { ctx, w, h } = setupCanvas(canvas);
+    ctx.clearRect(0,0,w,h);
+
+    const total = sum(data.map(d=>d.value));
+    const cx = w/2, cy = h/2, r = Math.min(w,h)*0.34;
+
+    // background ring
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI*2);
+    ctx.fillStyle = "rgba(255,255,255,.04)";
+    ctx.fill();
+
+    if(total <= 0){
+      ctx.fillStyle = "rgba(234,240,255,.65)";
+      ctx.font = "12px system-ui, -apple-system, Segoe UI, Roboto, Arial";
+      ctx.textAlign = "center";
+      ctx.fillText("Sem dados para o gráfico", cx, cy);
+      return;
+    }
+
+    let angle = -Math.PI/2;
+    data.forEach((d,i)=>{
+      const slice = (d.value/total) * Math.PI*2;
+      ctx.beginPath();
+      ctx.moveTo(cx,cy);
+      ctx.arc(cx,cy,r, angle, angle+slice);
+      ctx.closePath();
+      ctx.fillStyle = d.color || PIE_COLORS[i%PIE_COLORS.length];
+      ctx.fill();
+      angle += slice;
+    });
+
+    // hole (donut)
+    ctx.beginPath();
+    ctx.arc(cx, cy, r*0.58, 0, Math.PI*2);
+    ctx.fillStyle = "rgba(11,18,32,.92)";
+    ctx.fill();
+
+    // center text
+    ctx.fillStyle = "rgba(234,240,255,.9)";
+    ctx.font = "800 12px system-ui, -apple-system, Segoe UI, Roboto, Arial";
+    ctx.textAlign = "center";
+    ctx.fillText("Total despesas", cx, cy-6);
+
+    ctx.fillStyle = "rgba(234,240,255,.95)";
+    ctx.font = "900 14px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace";
+    ctx.fillText(fmt(total), cx, cy+14);
+  }
+
+  function drawBar(canvas, data){
+    const { ctx, w, h } = setupCanvas(canvas);
+    ctx.clearRect(0,0,w,h);
+
+    const padding = { l: 34, r: 14, t: 12, b: 34 };
+    const plotW = w - padding.l - padding.r;
+    const plotH = h - padding.t - padding.b;
+
+    const maxV = Math.max(1, ...data.map(d=>d.value));
+    // grid lines
+    ctx.strokeStyle = "rgba(255,255,255,.08)";
+    ctx.lineWidth = 1;
+    for(let i=0;i<=4;i++){
+      const y = padding.t + (plotH*(i/4));
+      ctx.beginPath();
+      ctx.moveTo(padding.l, y);
+      ctx.lineTo(padding.l+plotW, y);
+      ctx.stroke();
+    }
+
+    const n = data.length;
+    const gap = 10;
+    const barW = Math.max(16, (plotW - gap*(n-1)) / n);
+
+    data.forEach((d,i)=>{
+      const x = padding.l + i*(barW+gap);
+      const barH = (d.value/maxV) * plotH;
+      const y = padding.t + (plotH - barH);
+
+      // bar
+      ctx.fillStyle = d.color || PIE_COLORS[i%PIE_COLORS.length];
+      ctx.globalAlpha = 0.92;
+      ctx.fillRect(x, y, barW, barH);
+      ctx.globalAlpha = 1;
+
+      // label
+      ctx.fillStyle = "rgba(234,240,255,.75)";
+      ctx.font = "10px system-ui, -apple-system, Segoe UI, Roboto, Arial";
+      ctx.textAlign = "center";
+      ctx.fillText(d.short || d.label, x + barW/2, padding.t + plotH + 18);
+    });
+
+    // y-axis min/max
+    ctx.fillStyle = "rgba(234,240,255,.55)";
+    ctx.font = "10px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace";
+    ctx.textAlign = "left";
+    ctx.fillText("0", 4, padding.t + plotH);
+    ctx.fillText(fmt(maxV), 4, padding.t + 10);
+  }
+
+  function renderLegend(el, data, total){
+    el.innerHTML = "";
+    data.forEach(d=>{
+      const pct = total>0 ? (d.value/total)*100 : 0;
+      const div = document.createElement("div");
+      div.className = "legItem";
+      div.innerHTML = `
+        <span class="swatch" style="background:${d.color};"></span>
+        <span><b>${escapeHtml(d.label)}</b> — ${fmt(d.value)} (${pct.toFixed(0)}%)</span>
+      `;
+      el.appendChild(div);
+    });
   }
 
   // ---------- Simulation ----------
-  function simular(){
-    // KPIs básicos
+  function simular(fromResize=false){
+    const saldoInicial = sum(state.entradas.filter(x=>x.dia===0).map(x=>x.valor));
     const totalEntradas = sum(state.entradas.map(x=>x.valor));
     const totalDespesas = sum(state.despesas.map(x=>x.valor));
 
     document.getElementById("kpiEntradas").textContent = fmt(totalEntradas);
     document.getElementById("kpiDespesas").textContent = fmt(totalDespesas);
 
-    const saldoAtual = Number(state.saldoAtual||0);
-
-    // disponível no dia 05 = saldo atual + entradas com dia <= 05
-    const entradasAte05 = sum(state.entradas.filter(x=>x.dia<=5).map(x=>x.valor));
-    const disponivel05 = saldoAtual + entradasAte05;
+    const entradasAte05 = sum(state.entradas.filter(x=>x.dia>0 && x.dia<=5).map(x=>x.valor));
+    const disponivel05 = saldoInicial + entradasAte05;
     document.getElementById("kpiDisponivel05").textContent = fmt(disponivel05);
 
-    // Contas "até 15" (azuis)
-    const contasAte15 = state.despesas.filter(x=>x.ate15).sort((a,b)=>a.dia-b.dia);
-    const totalAte15 = sum(contasAte15.map(x=>x.valor));
-
     // Plano 05
-    const blindTotal = (state.blindagem.mercado||0) + (state.blindagem.combustivel||0) + (state.blindagem.farmacia||0);
-    const agiota = Number(state.agiotaQuit||0);
-    const escolaDez = Number(state.escolaDez||0);
+    const blindagem = state.despesas.filter(x=>x.role==="blindagem");
+    const agiota = state.despesas.filter(x=>x.role==="agiota");
+    const escolaDez = state.despesas.filter(x=>x.role==="escolaDez");
+    const contasAte15 = state.despesas.filter(x=>x.ate15 && (x.role==="nenhum" || !x.role));
+
+    const blindTotal = sum(blindagem.map(x=>x.valor));
+    const agiotaTotal = sum(agiota.map(x=>x.valor));
+    const escolaDezTotal = sum(escolaDez.map(x=>x.valor));
+    const contasAte15Total = sum(contasAte15.map(x=>x.valor));
 
     const planoSaidas = [
-      { etapa:"1", nome:"Blindagem", desc:"Mercado + Combustível + Farmácia/Imprevisto (05→15)", valor: blindTotal },
-      { etapa:"2", nome:"Quitar agiota", desc:"Quitação final (encerra e pronto)", valor: agiota },
-      { etapa:"3", nome:"Contas até dia 15", desc:"Somatório das despesas marcadas “Até dia 15”", valor: totalAte15 },
-      { etapa:"4", nome:"Escola (Dezembro)", desc:"Atraso de dezembro com juros", valor: escolaDez }
+      { etapa:"1", nome:"Blindagem", desc:"Mercado + combustível + farmácia/imprevisto (05→15)", valor: blindTotal },
+      { etapa:"2", nome:"Quitar agiota", desc:"Quitação final (encerra e pronto)", valor: agiotaTotal },
+      { etapa:"3", nome:"Contas até dia 15", desc:"Despesas marcadas “Até dia 15”", valor: contasAte15Total },
+      { etapa:"4", nome:"Escola (Dezembro)", desc:"Atraso de dezembro com juros", valor: escolaDezTotal },
     ];
-
     const totalPlano05 = sum(planoSaidas.map(x=>x.valor));
     const sobra05 = disponivel05 - totalPlano05;
-
     document.getElementById("kpiSobra05").textContent = fmt(sobra05);
 
-    // Render tabela plano 05
+    // Mercado por dia
+    const mercadoMes = sum(state.despesas.filter(x=>x.categoria==="mercado_mes").map(x=>x.valor));
+    const mercadoDia = mercadoMes / 30;
+    document.getElementById("kpiMercadoDia").textContent = `${fmt(mercadoDia)} / dia`;
+
+    // Tabela plano 05
     const tb = document.querySelector("#tPlano05 tbody");
     tb.innerHTML = "";
     planoSaidas.forEach(x=>{
@@ -679,7 +921,6 @@
       `;
       tb.appendChild(tr);
     });
-
     const trTot = document.createElement("tr");
     trTot.innerHTML = `
       <td colspan="2"><b>Total do Plano do Dia 05</b></td>
@@ -689,68 +930,73 @@
 
     const msg = document.getElementById("msgPlano05");
     if(sobra05 >= 0){
-      msg.innerHTML = `Status: <span class="ok">Plano viável</span>. Sobra após o dia 05: <span class="ok">${fmt(sobra05)}</span>. Dê destino à sobra (imprevistos / reserva).`;
+      msg.innerHTML = `Status: <span class="ok">Plano viável</span>. Sobra após o dia 05: <span class="ok">${fmt(sobra05)}</span>.`;
     }else{
-      msg.innerHTML = `Status: <span class="bad">Faltam ${fmt(Math.abs(sobra05))}</span> para fechar o Plano do Dia 05. Ajuste blindagem, despesas até 15, ou espere próxima entrada.`;
+      msg.innerHTML = `Status: <span class="bad">Faltam ${fmt(Math.abs(sobra05))}</span> para fechar o Plano do Dia 05.`;
     }
 
-    // Cronograma 05/15/20 (simples e útil)
+    // Cronograma
     const entradasDia = d => sum(state.entradas.filter(x=>x.dia===d).map(x=>x.valor));
-
-    const saldoDepois05 = sobra05; // porque o disponivel05 já considerou saldo+entradas <=05 e subtraiu o plano
-    const saldoDepois15 = saldoDepois05 + entradasDia(15); // ainda sem descontar nada específico do dia 15
+    const saldoDepois05 = sobra05;
+    const saldoDepois15 = saldoDepois05 + entradasDia(15);
     const saldoDepois20 = saldoDepois15 + entradasDia(20);
 
-    // Sugestões de saída em 15/20 (não “obriga”, só aponta)
-    // - dia 15: reforço mercado 15→20 (metade da blindagem mercado, como padrão)
-    const sugestMerc15 = Math.min((state.blindagem.mercado||0), 600); // cap simples
-    // - dia 20: restante do mês (despesas NÃO ate15 + mercado restante)
-    const despesasApos15 = state.despesas.filter(x=>!x.ate15);
+    const despesasApos15 = state.despesas.filter(x=>!x.ate15 && x.role==="nenhum");
     const totalApos15 = sum(despesasApos15.map(x=>x.valor));
 
     const crTb = document.querySelector("#tCrono tbody");
     crTb.innerHTML = "";
-
     crTb.appendChild(crRow("05", fmt(entradasAte05), `Executar Plano do Dia 05 (${fmt(totalPlano05)})`, fmt(saldoDepois05)));
-    crTb.appendChild(crRow("15", fmt(entradasDia(15)), `Sugestão: reforçar mercado (15→20) até ${fmt(sugestMerc15)} + iniciar reserva`, fmt(saldoDepois15)));
-    crTb.appendChild(crRow("20", fmt(entradasDia(20)), `Pagar despesas após 15 (estimado ${fmt(totalApos15)}) + reserva/imprevistos`, fmt(saldoDepois20)));
+    crTb.appendChild(crRow("15", fmt(entradasDia(15)), `Sugestão: reforçar mercado + iniciar reserva`, fmt(saldoDepois15)));
+    crTb.appendChild(crRow("20", fmt(entradasDia(20)), `Pagar despesas após 15 (estimado ${fmt(totalApos15)})`, fmt(saldoDepois20)));
 
-    // Fluxo por dia
+    // Fluxo
     const fluxo = [];
-
-    // saldo atual (informativo)
-    fluxo.push({dia:0, tipo:"Base", nome:"Saldo atual", valor: saldoAtual});
-
     state.entradas.forEach(e=> fluxo.push({dia:e.dia, tipo:"Entrada", nome:e.nome, valor:e.valor}));
-
-    // Plano do dia 05 como eventos
-    planoSaidas.forEach(x=>{
-      fluxo.push({dia:5, tipo:"Saída", nome:`Plano 05 — ${x.nome}`, valor: -x.valor});
-    });
-
-    // Demais despesas (para visualização)
-    state.despesas.forEach(d=>{
-      fluxo.push({dia:d.dia, tipo:"Despesa", nome:d.nome + (d.ate15 ? " (até 15)" : ""), valor: -d.valor});
-    });
-
+    planoSaidas.forEach(x=> fluxo.push({dia:5, tipo:"Saída", nome:`Plano 05 — ${x.nome}`, valor:-x.valor}));
+    state.despesas.forEach(d=> fluxo.push({dia:d.dia, tipo:"Despesa", nome:d.nome + (d.ate15 ? " (até 15)" : ""), valor:-d.valor}));
     fluxo.sort((a,b)=>a.dia-b.dia);
 
     const ftb = document.querySelector("#tFluxo tbody");
     ftb.innerHTML = "";
     fluxo.forEach(f=>{
       const tr = document.createElement("tr");
-      const tipo = escapeHtml(f.tipo);
-      const cor = f.valor >= 0 ? "ok" : "bad";
+      const cls = f.valor >= 0 ? "ok" : "bad";
       tr.innerHTML = `
         <td class="mono">${String(f.dia).padStart(2,'0')}</td>
-        <td>${tipo}</td>
+        <td>${escapeHtml(f.tipo)}</td>
         <td>${escapeHtml(f.nome)}</td>
-        <td class="r mono ${cor}">${fmt(Math.abs(f.valor))}${f.valor<0?"":""}</td>
+        <td class="r mono ${cls}">${fmt(Math.abs(f.valor))}</td>
       `;
       ftb.appendChild(tr);
     });
 
-    // auto-save leve (para não perder alterações)
+    // ---------- Charts data ----------
+    // "Para onde o dinheiro vai" (base: despesas)
+    const outras = state.despesas.filter(d=>d.role==="nenhum" && !d.ate15 && d.categoria!=="mercado_mes");
+    const outrasTotal = sum(outras.map(x=>x.valor));
+    const mercadoMesTotal = mercadoMes;
+
+    const breakdown = [
+      { key:"blind", label:"Blindagem", short:"Blind.", value: blindTotal, color: PIE_COLORS[0] },
+      { key:"agiota", label:"Agiota", short:"Agiota", value: agiotaTotal, color: PIE_COLORS[3] },
+      { key:"escola", label:"Escola", short:"Escola", value: escolaDezTotal, color: PIE_COLORS[2] },
+      { key:"ate15", label:"Contas até 15", short:"Até15", value: contasAte15Total, color: PIE_COLORS[1] },
+      { key:"merc", label:"Mercado (mês)", short:"Merc.", value: mercadoMesTotal, color: PIE_COLORS[6] },
+      { key:"out", label:"Outras", short:"Outras", value: outrasTotal, color: PIE_COLORS[5] },
+    ].filter(x=>x.value > 0.000001); // remove zerados
+
+    const totalBreak = sum(breakdown.map(x=>x.value));
+    document.getElementById("pieTotal").textContent = `Total: ${fmt(totalBreak)}`;
+    document.getElementById("barTotal").textContent = `Total: ${fmt(totalBreak)}`;
+
+    // Draw
+    drawPie(document.getElementById("pieChart"), breakdown);
+    drawBar(document.getElementById("barChart"), breakdown);
+
+    renderLegend(document.getElementById("pieLegend"), breakdown, totalBreak);
+    renderLegend(document.getElementById("barLegend"), breakdown, totalBreak);
+
     save(state);
   }
 
@@ -765,8 +1011,6 @@
     `;
     return tr;
   }
-
-  function sum(arr){ return arr.reduce((a,b)=>a+(Number(b)||0),0); }
 
   // ---------- Toast ----------
   function toast(msg){
@@ -788,8 +1032,12 @@
   }
 
   // ---------- Init ----------
-  render();
-  bind();
+  function init(){
+    render();
+    bind();
+    simular();
+  }
+  init();
 </script>
 </body>
 </html>
