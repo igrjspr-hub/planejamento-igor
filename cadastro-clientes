@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>DigitalDM • Painel de Leads (Closer)</title>
+  <style>
+    :root{
+      --bg:#0b1220;
+      --card:#0f1b33;
+      --card2:#0c172d;
+      --line:rgba(255,255,255,.08);
+      --text:#eaf0ff;
+      --muted:rgba(234,240,255,.72);
+      --muted2:rgba(234,240,255,.55);
+      --accent:#7c5cff;
+      --good:#22c55e;
+      --warn:#f59e0b;
+      --bad:#ef4444;
+      --info:#38bdf8;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+      background: radial-gradient(1200px 700px at 20% -10%, rgba(124,92,255,.24), transparent 60%),
+                  radial-gradient(900px 500px at 90% 10%, rgba(56,189,248,.18), transparent 55%),
+                  var(--bg);
+      color:var(--text);
+    }
+    .wrap{max-width:1200px;margin:28px auto;padding:0 16px 40px}
+    .topbar{
+      display:flex;gap:14px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;
+      padding:18px 18px;border:1px solid var(--line);border-radius:16px;
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      box-shadow:0 18px 60px rgba(0,0,0,.35);
+    }
+    .brand{
+      display:flex;gap:12px;align-items:center;
+    }
+    .logo{
+      width:44px;height:44px;border-radius:12px;
+      background:linear-gradient(135deg, var(--accent), rgba(56,189,248,.95));
+      box-shadow:0 10px 30px rgba(124,92,255,.25);
+    }
+    h1{margin:0;font-size:18px;letter-spacing:.2px}
+    .sub{margin-top:4px;color:var(--muted);font-size:13px}
+    .actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    .btn{
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.04);
+      color:var(--text);
+      padding:10px 12px;border-radius:12px;
+      cursor:pointer;font-weight:600;font-size:13px;
+      transition:.15s ease;
+      user-select:none;
+    }
+    .btn:hover{transform:translateY(-1px);border-color:rgba(124,92,255,.45)}
+    .btn.primary{background:rgba(124,92,255,.18);border-color:rgba(124,92,255,.55)}
+    .btn.danger{background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.45)}
+    .grid{
+      margin-top:14px;
+      display:grid;grid-template-columns:repeat(12,1fr);gap:12px;
+    }
+    .card{
+      grid-column:span 3;
+      padding:14px 14px;border-radius:16px;border:1px solid var(--line);
+      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+    }
+    .card h3{margin:0;font-size:12px;color:var(--muted);font-weight:700;letter-spacing:.3px;text-transform:uppercase}
+    .card .big{margin-top:8px;font-size:22px;font-weight:900}
+    .card .small{margin-top:6px;color:var(--muted2);font-size:12px;line-height:1.35}
+    .card.span6{grid-column:span 6}
+    .card.span4{grid-column:span 4}
+    .card.span3{grid-column:span 3}
+    .filters{
+      display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px
+    }
+    .field{
+      display:flex;flex-direction:column;gap:6px;
+      padding:12px;border:1px solid var(--line);border-radius:16px;
+      background:rgba(255,255,255,.03);
+    }
+    label{font-size:11px;color:var(--muted);font-weight:700;letter-spacing:.25px;text-transform:uppercase}
+    input, select{
+      outline:none;border:1px solid rgba(255,255,255,.10);
+      background:rgba(0,0,0,.12);color:var(--text);
+      padding:10px 10px;border-radius:12px;
+      font-size:13px;
+    }
+    input::placeholder{color:rgba(234,240,255,.40)}
+    .tableWrap{
+      margin-top:14px;
+      border:1px solid var(--line);
+      border-radius:16px;
+      overflow:hidden;
+      background:rgba(255,255,255,.02);
+    }
+    table{width:100%;border-collapse:separate;border-spacing:0}
+    thead th{
+      text-align:left;
+      font-size:11px;
+      letter-spacing:.35px;
+      text-transform:uppercase;
+      color:var(--muted);
+      padding:14px 12px;
+      background:rgba(255,255,255,.04);
+      border-bottom:1px solid var(--line);
+      position:sticky;top:0;z-index:2;
+    }
+    tbody td{
+      padding:12px;
+      border-bottom:1px solid var(--line);
+      font-size:13px;
+      vertical-align:middle;
+      color:rgba(234,240,255,.92);
+    }
+    tbody tr:hover{background:rgba(124,92,255,.06)}
+    .muted{color:var(--muted2)}
+    .pill{
+      display:inline-flex;align-items:center;gap:6px;
+      padding:6px 10px;border-radius:999px;
+      font-size:12px;font-weight:800;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.03);
+      white-space:nowrap;
+    }
+    .pill.imediato{border-color:rgba(34,197,94,.35);background:rgba(34,197,94,.12);color:#bff7d1}
+    .pill.semana{border-color:rgba(245,158,11,.35);background:rgba(245,158,11,.12);color:#ffe3b0}
+    .pill.mes{border-color:rgba(56,189,248,.35);background:rgba(56,189,248,.12);color:#c7f0ff}
+    .pill.fat{border-color:rgba(124,92,255,.45);background:rgba(124,92,255,.12);color:#ddd6ff}
+    .pill.fil{border-color:rgba(148,163,184,.35);background:rgba(148,163,184,.10);color:#e2e8f0}
+    .rank{
+      font-weight:900;
+      color:#fff;
+      background:rgba(124,92,255,.14);
+      border:1px solid rgba(124,92,255,.45);
+      width:34px;height:34px;border-radius:12px;
+      display:inline-grid;place-items:center;
+    }
+    .chip{
+      display:inline-flex;align-items:center;gap:8px;
+    }
+    .copy{
+      cursor:pointer;
+      font-weight:800;
+      color:#c7f0ff;
+      border-bottom:1px dashed rgba(199,240,255,.45);
+    }
+    .hint{
+      margin-top:12px;
+      color:var(--muted2);
+      font-size:12px;
+      line-height:1.4;
+    }
+    .editable{
+      outline:none;
+      border-radius:8px;
+      padding:6px 8px;
+    }
+    .editable:focus{
+      box-shadow:0 0 0 3px rgba(124,92,255,.25);
+      background:rgba(124,92,255,.08);
+    }
+    @media (max-width: 980px){
+      .card{grid-column:span 6}
+      .card.span6{grid-column:span 12}
+      thead{display:none}
+      table, tbody, tr, td{display:block;width:100%}
+      tbody td{border-bottom:none}
+      tbody tr{border-bottom:1px solid var(--line);padding:8px 0}
+      tbody td[data-label]::before{
+        content:attr(data-label);
+        display:block;
+        color:var(--muted);
+        font-size:11px;
+        text-transform:uppercase;
+        letter-spacing:.3px;
+        margin-bottom:6px;
+        font-weight:800;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <h1>DigitalDM • Painel de Leads (Closer)</h1>
+          <div class="sub">Ordenação automática: <b>Urgência</b> (mais importante) → <b>Faturamento</b> → <b>Data de entrada</b>.</div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn primary" id="btnSort">Reordenar</button>
+        <button class="btn" id="btnExport">Copiar lista (Whats)</button>
+        <button class="btn danger" id="btnReset">Resetar filtros</button>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="card span3">
+        <h3>Total de Leads</h3>
+        <div class="big" id="kpiTotal">0</div>
+        <div class="small">Leads carregados na tabela.</div>
+      </div>
+      <div class="card span3">
+        <h3>Imediato</h3>
+        <div class="big" id="kpiImediato">0</div>
+        <div class="small">Maior prioridade.</div>
+      </div>
+      <div class="card span3">
+        <h3>Semana que vem</h3>
+        <div class="big" id="kpiSemana">0</div>
+        <div class="small">Prioridade média.</div>
+      </div>
+      <div class="card span3">
+        <h3>Mês que vem</h3>
+        <div class="big" id="kpiMes">0</div>
+        <div class="small">Baixa prioridade.</div>
+      </div>
+
+      <div class="card span6">
+        <h3>Filtros rápidos</h3>
+        <div class="filters">
+          <div class="field">
+            <label>Buscar</label>
+            <input id="q" type="text" placeholder="empresa, estado, telefone..." />
+          </div>
+          <div class="field">
+            <label>Urgência</label>
+            <select id="fUrg">
+              <option value="">Todas</option>
+              <option value="Imediato">Imediato</option>
+              <option value="Semana que vem">Semana que vem</option>
+              <option value="Mês que vem">Mês que vem</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Estado (UF)</label>
+            <select id="fUF">
+              <option value="">Todos</option>
+              <option value="SP">SP</option>
+              <option value="RJ">RJ</option>
+              <option value="SC">SC</option>
+              <option value="-">—</option>
+            </select>
+          </div>
+        </div>
+        <div class="hint">
+          Dica: você pode editar células direto na tabela (clique e digite). Depois, clique em <b>Reordenar</b>.
+        </div>
+      </div>
+
+      <div class="card span6">
+        <h3>Como inserir novos leads</h3>
+        <div class="small">
+          Você pode duplicar uma linha na tabela e editar os campos:
+          <br>• Empresa • UF • Telefone • Faturamento • Data de entrada • Urgência
+          <br><br><b>Regras de prioridade:</b>
+          <br>1) Imediato  2) Semana que vem  3) Mês que vem
+          <br>Dentro da urgência: +150K &gt; 50–150K &gt; 20–50K &gt; 10–50K &gt; 20K &gt; Filantrópico
+        </div>
+      </div>
+    </div>
+
+    <div class="tableWrap">
+      <table id="leads">
+        <thead>
+          <tr>
+            <th style="width:64px;">#</th>
+            <th>Empresa</th>
+            <th style="width:90px;">UF</th>
+            <th style="width:160px;">Telefone</th>
+            <th style="width:140px;">Faturamento</th>
+            <th style="width:140px;">Data entrada</th>
+            <th style="width:170px;">Quando quer atendimento</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!--
+            LINHAS PRONTAS (já ordenadas por Urgência > Faturamento > Data).
+            Você pode editar qualquer célula (contenteditable) manualmente.
+          -->
+
+          <!-- IMEDIATO -->
+          <tr data-urg="Imediato" data-fat="+150K" data-date="01-01-26">
+            <td data-label="#" ><span class="rank" data-rank>1</span></td>
+            <td data-label="Empresa" contenteditable="true" class="editable">Emagrecentro</td>
+            <td data-label="UF" contenteditable="true" class="editable">SC</td>
+            <td data-label="Telefone" class="chip">
+              <span contenteditable="true" class="editable">4999573641</span>
+              <span class="copy" data-copy>copiar</span>
+            </td>
+            <td data-label="Faturamento"><span class="pill fat" contenteditable="true" class="editable">+150K</span></td>
+            <td data-label="Data entrada" contenteditable="true" class="editable">01-01-26</td>
+            <td data-label="Urgência"><span class="pill imediato" contenteditable="true" class="editable">Imediato</span></td>
+          </tr>
+
+          <tr data-urg="Imediato" data-fat="50-150K" data-date="31-12-25">
+            <td data-label="#"><span class="rank" data-rank>2</span></td>
+            <td data-label="Empresa" contenteditable="true" class="editable">Instituto Venturo</td>
+            <td data-label="UF" contenteditable="true" class="editable">RJ</td>
+            <td data-label="Telefone" class="chip">
+              <span contenteditable="true" class="editable">21981087665</span>
+              <span class="copy" data-copy>copiar</span>
+            </td>
+            <td data-label="Faturamento"><span class="pill fat" contenteditable="true" class="editable">50-150K</span></td>
+            <td data-label="Data entrada" contenteditable="true" class="editable">31-12-25</td>
+            <td data-label="Urgência"><span class="pill imediato" contenteditable="true" class="editable">Imediato</span></td>
+          </tr>
+
+          <tr data-urg="Imediato" data-fat="50-150K" data-date="31-12-25">
+            <td data-label="#"><span class="rank" data-rank>3</span></td>
+            <td data-label="Empresa" contenteditable="true" class="editable">DOM Shampoo</td>
+            <td data-label="UF" contenteditable="true" class="editable">SP</td>
+            <td data-label="Telefone" class="chip">
+              <span contenteditable="true" class="editable">11958638580</span>
+              <span class="copy" data-copy>copiar</span>
+            </td>
+            <td data-label="Faturamento"><span class="pill fat" contenteditable="true" class="editable">50-150K</span></td>
+            <td data-label="Data entrada" contenteditable="true" class="editable">31-12-25</td>
+            <td data-label="Urgência"><span class="pill imediato" contenteditable="true" class="editable">Imediato</span></td>
+          </tr>
+
+          <tr data-urg="Imediato" data-fat="50-150K" data-date="01-01-26">
+            <td data-label="#"><span class="rank" data-rank>4</span></td>
+            <td data-label="Empresa" contenteditable="true" class="editable">MR Móveis</td>
+            <td data-label="UF" contenteditable="true" class="editable">SC</td>
+            <td data-label="Telefone" class="chip">
+              <span contenteditable="true" class="editable">49999122411</span>
+              <span class="copy" data-copy>copiar</span>
+            </td>
+            <td data-label="Faturamento"><span class="pill fat" contenteditable="true" class="editable">50-150K</span></td>
+            <td data-label="Data entrada" contenteditable="true" class="editable">01-01-26</td>
+            <td data-label="Urgência"><span class="pill imediato" contenteditable="true" class="editable">Imediato</span></td>
+          </tr>
+
+          <tr data-urg="Imediato" data-fat="50-150K" data-date="01-01-26">
+            <td data-label="#"><span class="rank" data-rank>5</span></td>
+            <td data-label="Empresa" contenteditable="true" class="editable">Centro Veterinário Palmense</td>
+            <td data-label="UF" contenteditable="true" class="editable">SC</td>
+            <td data-label="Telefone" class="chip">
+              <span contenteditable="true" class="editable">4991554810</span>
+              <span class="copy" data-copy>copiar</span>
+            </td>
+            <td data-label="Faturamento"><span class="pill fat" contenteditable="true" class="editable">50-150K</span></td>
+            <td data-label="Data entrada" contenteditable="true" class="editable">01-01-26</td>
+            <td data-label="Urgência"><span class="pill imediato" contenteditable="true" class="editable">Imediato</span></td>
+          </tr>
+
+          <tr data-urg="Imediato" data-fat="20-50K" data-date="01-01-26">
+            <td data-label="#"><span class="rank" data-rank>6</span></td>
+            <td data-label="Empresa" contenteditable="true" class="editable">IJESP - Instituto de Joelho de São Paulo</td>
+            <td data-label="UF" contenteditable="true" class="editable">SP</td>
+            <td data-label="Telefone" class="chip">
+              <span contenteditable="true" class="editable muted">—</span>
+              <span class="copy" data-copy>copiar</span>
+            </td>
+            <td data-label="Faturamento"><span class="pill fat" contenteditable="true" class="editable">20-50K</span></td>
+            <td data-label="Data entrada" contenteditable="true" class="editable">01-01-26</td>
+            <td data-label="Urgência"><span class="pill imediato" contenteditable="true" class="editable">Imediato</span></td>
+          </tr>
+
+          <tr data-urg="Imediato" data-fat="20-50K" data-date="01-01-26">
+            <td data-label="#"><span class="rank" data-rank>7</span></td>
+            <td data-label="Empresa" contenteditable="true" class="editable">Ateliê do Sorriso</td>
+            <td data-label="UF" contenteditable="true" class="editable">RJ</td>
+            <td data-label="Telefone" class="chip">
+              <span contenteditable="true" class="editable">21971652149</span>
+              <span class="copy" data-copy>copiar</span>
+            </td>
+            <td data-label="Faturamento"><span class="pill fat" contenteditable="true" class="editable">20-50K</span></td>
+            <td data-label="Data entrada" contenteditable="true" class="editable">01-01-26</td>
+            <td data-label="Urgência"><span class="pill imediato" contenteditable="true" class="editable">Imediato</span></td>
+          </tr>
+
+          <tr data-urg="Imediato" data-fat="20K" data-date="01-01-26">
+            <td data-label="#"><span class="rank" data-rank>8</span></td>
+            <td data-label="Empresa" contenteditable="true" class="editable">Voga Modas</td>
+            <td data-label="UF" contenteditable="true" class="editable">SP</td>
+            <td data-label="Telefone" class="chip">
+              <span contenteditable="true" class="editable">11930112247</span>
+              <span class="copy" data-copy>copiar</span>
+            </td>
+            <td data-label="Faturamento"><span class="pill fat" contenteditable="true" class="editable">20K</span></td>
+            <td data-label="Data entrada" contenteditable="true" class="editable">01-01-26</td>
+            <td data-label="Urgência"><span class="pill imediato" contenteditable="true" class="editable">Imediato</span></td>
+          </tr>
+
+          <tr data-urg="Imediato" data-fat="20K" data-date="01-01-26">
+            <td data-label="#"><span class="rank" data-rank>9</span></td>
+            <td data-label="Empresa" contenteditable="true" class="editable">Electric Sheep</td>
+            <td data-label="UF" contenteditable="true" class="editable">RJ</td>
+            <td data-label="Telefone" class="chip">
+              <span contenteditable="true" class="editable">21996173417</span>
+              <span class="copy" data-copy>copiar</span>
+            </td>
+            <td data-label="Faturamento"><span class="pill fat" contenteditable="true" class="editable">20K</span></td>
+            <td data-label="Data entrada" contenteditable="true" class="editable">01-01-26</td>
+            <td data-label="Urgência"><span class="pill imediato" contenteditable="true" class="editable">Imediato</span></td>
+          </tr>
+
+          <tr data-urg="Imediato" data-fat="20K" data-date="01-01-26">
+            <td data-label="#"><span class="rank" data-rank>10</span></td>
+            <td data-label="Empresa" contenteditable="true" class="editable">Consultório Odontológico Particular</td>
+            <td data-label="UF" contenteditable="true" class="editable">SP</td>
+            <td data-label="Telefone" class="chip">
+              <span contenteditable="true" class="editable">11982254499</span>
+              <span class="copy" data-copy>copiar</span>
+            </td>
+            <td data-label="Faturamento"><span class="pill fat" contenteditable="true" class="editable">20K</span></td>
+            <td data-label="Data entrada" contenteditable="true" class="editable">01-01-26</td>
+            <td data-label="Urgência"><span class="pill imediato" contenteditable="true" class="editable">Imediato</span></td>
+          </tr>
+
+          <tr data-urg="Imediato" data-fat="20K" data-date="01-01-26">
+            <td data-label="#"><span class="rank" data-rank>11</span></td>
+            <td data-label="Empresa" contenteditable="true" class="editable">IMI - Instituto de Metrologia Industrial</td>
+            <td data-label="UF" contenteditable="true" class="editable">RJ</td>
+            <td data-label="Telefone" class="chip">
+              <span contenteditable="true" class="editable">21990448265</span>
+              <span class="copy" data-copy>copiar</span>
+            </td>
+            <td data-label="Faturamento"><span class="pill fat" contenteditable="true" class="editable">20K</span></td>
+            <td data-label="Data entrada" contenteditable="true" class="editable">01-01-26</td>
+            <td data-label="Urgência"><span class="pill imediato" contenteditable="true" class="editable">Imediato</span></td>
+          </tr>
+
+          <tr data-urg="Imediato" data-fat="Filantrópico" data-date="01-01-26">
+            <td data-label="#"><span class="rank" data-rank>12</span></td>
+            <td data-label="Empresa" contenteditable="true" class="editable">Sas Seconci</td>
+            <td data-label="UF" contenteditable="true" class="editable">SP</td>
+            <td data-label="Telefone" class="chip">
+              <span contenteditable="true" class="editable">11951424541</span>
+              <span class="copy" data-copy>copiar</span>
+            </td>
+            <td data-label="Faturamento"><span class="pill fil" contenteditable="true" class="editable">Filantrópico • 20K</span></td>
+            <td data-label="Data entrada" contenteditable="true" class="editable">01-01-26</td>
+            <td data-label="Urgência"><span class="pill imediato" contenteditable="true" class="editable">Imediato</span></td>
+          </tr>
+
+          <!-- SEMANA QUE VEM -->
+          <tr data-urg="Semana que vem" data-fat="10-50K" data-date="01-01-26">
+            <td data-label="#"><span class="rank" data-rank>13</span></td>
+            <td data-label="Empresa" contenteditable="true" class="editable">Ivonete Dellalana (sem empresa)</td>
+            <td data-label="UF" contenteditable="true" class="editable">SP</td>
+            <td data-label="Telefone" class="chip">
+              <span contenteditable="true" class="editable">19995614276</span>
+              <span class="copy" data-copy>copiar</span>
+            </td>
+            <td data-label="Faturamento"><span class="pill fat" contenteditable="true" class="editable">10-50K</span></td>
+            <td data-label="Data entrada" contenteditable="true" class="editable">01-01-26</td>
+            <td data-label="Urgência"><span class="pill semana" contenteditable="true" class="editable">Semana que vem</span></td>
+          </tr>
+
+          <!-- MÊS QUE VEM -->
+          <tr data-urg="Mês que vem" data-fat="+150K" data-date="">
+            <td data-label="#"><span class="rank" data-rank>14</span></td>
+            <td data-label="Empresa" contenteditable="true" class="editable">Ministério da Gestão e da Inovação em Serviços Públicos</td>
+            <td data-label="UF" contenteditable="true" class="editable">—</td>
+            <td data-label="Telefone" class="chip">
+              <span contenteditable="true" class="editable">41996866676</span>
+              <span class="copy" data-copy>copiar</span>
+            </td>
+            <td data-label="Faturamento"><span class="pill fat" contenteditable="true" class="editable">+150K</span></td>
+            <td data-label="Data entrada" contenteditable="true" class="editable muted">—</td>
+            <td data-label="Urgência"><span class="pill mes" contenteditable="true" class="editable">Mês que vem</span></td>
+          </tr>
+
+          <tr data-urg="Mês que vem" data-fat="20-50K" data-date="01-01-26">
+            <td data-label="#"><span class="rank" data-rank>15</span></td>
+            <td data-label="Empresa" contenteditable="true" class="editable">Clínica Marcelo Monteiro</td>
+            <td data-label="UF" contenteditable="true" class="editable">RJ</td>
+            <td data-label="Telefone" class="chip">
+              <span contenteditable="true" class="editable">21998420888</span>
+              <span class="copy" data-copy>copiar</span>
+            </td>
+            <td data-label="Faturamento"><span class="pill fat" contenteditable="true" class="editable">20-50K</span></td>
+            <td data-label="Data entrada" contenteditable="true" class="editable">01-01-26</td>
+            <td data-label="Urgência"><span class="pill mes" contenteditable="true" class="editable">Mês que vem</span></td>
+          </tr>
+
+          <tr data-urg="Mês que vem" data-fat="20K" data-date="01-01-26">
+            <td data-label="#"><span class="rank" data-rank>16</span></td>
+            <td data-label="Empresa" contenteditable="true" class="editable">Consultório Médico Esperança</td>
+            <td data-label="UF" contenteditable="true" class="editable">RJ</td>
+            <td data-label="Telefone" class="chip">
+              <span contenteditable="true" class="editable">21970383876</span>
+              <span class="copy" data-copy>copiar</span>
+            </td>
+            <td data-label="Faturamento"><span class="pill fat" contenteditable="true" class="editable">20K</span></td>
+            <td data-label="Data entrada" contenteditable="true" class="editable">01-01-26</td>
+            <td data-label="Urgência"><span class="pill mes" contenteditable="true" class="editable">Mês que vem</span></td>
+          </tr>
+
+          <tr data-urg="Mês que vem" data-fat="20K" data-date="01-01-26">
+            <td data-label="#"><span class="rank" data-rank>17</span></td>
+            <td data-label="Empresa" contenteditable="true" class="editable">Ai Press (Comunicação/Audiovisual)</td>
+            <td data-label="UF" contenteditable="true" class="editable">SP</td>
+            <td data-label="Telefone" class="chip">
+              <span contenteditable="true" class="editable">11972759856</span>
+              <span class="copy" data-copy>copiar</span>
+            </td>
+            <td data-label="Faturamento"><span class="pill fat" contenteditable="true" class="editable">20K</span></td>
+            <td data-label="Data entrada" contenteditable="true" class="editable">01-01-26</td>
+            <td data-label="Urgência"><span class="pill mes" contenteditable="true" class="editable">Mês que vem</span></td>
+          </tr>
+
+          <tr data-urg="Mês que vem" data-fat="20K" data-date="01-01-26">
+            <td data-label="#"><span class="rank" data-rank>18</span></td>
+            <td data-label="Empresa" contenteditable="true" class="editable">Consultório Dentário</td>
+            <td data-label="UF" contenteditable="true" class="editable">SP</td>
+            <td data-label="Telefone" class="chip">
+              <span contenteditable="true" class="editable">13997217914</span>
+              <span class="copy" data-copy>copiar</span>
+            </td>
+            <td data-label="Faturamento"><span class="pill fat" contenteditable="true" class="editable">20K</span></td>
+            <td data-label="Data entrada" contenteditable="true" class="editable">01-01-26</td>
+            <td data-label="Urgência"><span class="pill mes" contenteditable="true" class="editable">Mês que vem</span></td>
+          </tr>
+
+          <tr data-urg="Mês que vem" data-fat="20K" data-date="01-01-26">
+            <td data-label="#"><span class="rank" data-rank>19</span></td>
+            <td data-label="Empresa" contenteditable="true" class="editable">Dra. Fabiana Balan</td>
+            <td data-label="UF" contenteditable="true" class="editable">SP</td>
+            <td data-label="Telefone" class="chip">
+              <span contenteditable="true" class="editable">11914407034</span>
+              <span class="copy" data-copy>copiar</span>
+            </td>
+            <td data-label="Faturamento"><span class="pill fat" contenteditable="true" class="editable">20K</span></td>
+            <td data-label="Data entrada" contenteditable="true" class="editable">01-01-26</td>
+            <td data-label="Urgência"><span class="pill mes" contenteditable="true" class="editable">Mês que vem</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="hint">
+      ✅ Se você alterar “Faturamento” ou “Quando quer atendimento”, clique em <b>Reordenar</b> para recalcular o ranking.
+    </div>
+  </div>
+
+  <script>
+    // ---------- Helpers ----------
+    const urgencyWeight = (u) => {
+      const s = (u || "").toLowerCase();
+      if (s.includes("imediato")) return 3;
+      if (s.includes("semana")) return 2;
+      if (s.includes("mês") || s.includes("mes")) return 1;
+      return 0;
+    };
+
+    const revenueValue = (fatRaw) => {
+      const f = (fatRaw || "").toLowerCase().replace(/\s/g,'');
+      if (f.includes("filantr")) return 19000; // levemente abaixo de 20k
+      if (f.includes("+150")) return 150000;
+      if (f.includes("50-150")) return 100000;
+      if (f.includes("20-50")) return 35000;
+      if (f.includes("10-50")) return 30000;
+      if (f.includes("20k")) return 20000;
+      // fallback: tenta extrair número
+      const m = f.match(/(\d{2,6})/g);
+      if (!m) return 0;
+      const nums = m.map(n=>parseInt(n,10)).filter(n=>!Number.isNaN(n));
+      if (!nums.length) return 0;
+      return Math.max(...nums);
+    };
+
+    const dateValue = (dRaw) => {
+      // formato esperado: DD-MM-YY (ex: 01-01-26). Se vazio, joga pra baixo.
+      const d = (dRaw || "").trim();
+      const m = d.match(/^(\d{2})-(\d{2})-(\d{2})$/);
+      if (!m) return 0;
+      const dd = parseInt(m[1],10), mm = parseInt(m[2],10), yy = parseInt(m[3],10);
+      // 20YY (2026 etc.)
+      const fullY = 2000 + yy;
+      const dt = new Date(fullY, mm-1, dd);
+      return dt.getTime() || 0;
+    };
+
+    const normalizeCellText = (el) => (el?.innerText || el?.textContent || "").trim();
+
+    function syncRowFromCells(tr){
+      const tds = tr.querySelectorAll("td");
+      // Map: 0 rank, 1 empresa, 2 uf, 3 tel (span[0]), 4 faturamento (span), 5 data, 6 urgencia (span)
+      const fat = normalizeCellText(tds[4]?.querySelector("span"));
+      const urg = normalizeCellText(tds[6]?.querySelector("span"));
+      const date = normalizeCellText(tds[5]);
+
+      tr.dataset.fat = fat;
+      tr.dataset.urg = urg;
+      tr.dataset.date = date;
+    }
+
+    function scoreRow(tr){
+      // Urgência domina completamente. Depois faturamento. Depois data de entrada (mais recente ganha).
+      const uw = urgencyWeight(tr.dataset.urg);
+      const rv = revenueValue(tr.dataset.fat);
+      const dv = dateValue(tr.dataset.date);
+      // dv: quanto maior, mais recente. Multiplicadores garantem dominância.
+      return (uw * 1e12) + (rv * 1e6) + dv;
+    }
+
+    function applyUrgencyPills(tr){
+      const urgSpan = tr.querySelector("td:nth-child(7) span");
+      if (!urgSpan) return;
+      urgSpan.classList.remove("imediato","semana","mes");
+      const u = (urgSpan.innerText || "").toLowerCase();
+      if (u.includes("imediato")) urgSpan.classList.add("imediato");
+      else if (u.includes("semana")) urgSpan.classList.add("semana");
+      else urgSpan.classList.add("mes");
+    }
+
+    function applyRevenuePills(tr){
+      const fatSpan = tr.querySelector("td:nth-child(5) span");
+      if (!fatSpan) return;
+      fatSpan.classList.remove("fat","fil");
+      const f = (fatSpan.innerText || "").toLowerCase();
+      if (f.includes("filantr")) fatSpan.classList.add("fil");
+      else fatSpan.classList.add("fat");
+    }
+
+    function reorder(){
+      const tbody = document.querySelector("#leads tbody");
+      const rows = Array.from(tbody.querySelectorAll("tr"));
+
+      // sync dataset based on edited content
+      rows.forEach(r=>{
+        syncRowFromCells(r);
+        applyUrgencyPills(r);
+        applyRevenuePills(r);
+      });
+
+      rows.sort((a,b)=> scoreRow(b) - scoreRow(a));
+      rows.forEach(r=>tbody.appendChild(r));
+
+      // rank
+      rows.forEach((r,idx)=>{
+        const rankEl = r.querySelector("[data-rank]");
+        if (rankEl) rankEl.textContent = String(idx+1);
+      });
+
+      updateKPIs();
+      applyFilters();
+    }
+
+    function updateKPIs(){
+      const rows = Array.from(document.querySelectorAll("#leads tbody tr"));
+      const total = rows.length;
+      const im = rows.filter(r => urgencyWeight(r.dataset.urg)===3).length;
+      const se = rows.filter(r => urgencyWeight(r.dataset.urg)===2).length;
+      const me = rows.filter(r => urgencyWeight(r.dataset.urg)===1).length;
+
+      document.getElementById("kpiTotal").textContent = total;
+      document.getElementById("kpiImediato").textContent = im;
+      document.getElementById("kpiSemana").textContent = se;
+      document.getElementById("kpiMes").textContent = me;
+    }
+
+    function applyFilters(){
+      const q = (document.getElementById("q").value || "").toLowerCase().trim();
+      const fUrg = document.getElementById("fUrg").value;
+      const fUF = document.getElementById("fUF").value;
+
+      const rows = Array.from(document.querySelectorAll("#leads tbody tr"));
+      rows.forEach(r=>{
+        const empresa = normalizeCellText(r.querySelector("td:nth-child(2)"));
+        const uf = normalizeCellText(r.querySelector("td:nth-child(3)"));
+        const tel = normalizeCellText(r.querySelector("td:nth-child(4) span"));
+        const fat = normalizeCellText(r.querySelector("td:nth-child(5) span"));
+        const urg = normalizeCellText(r.querySelector("td:nth-child(7) span"));
+
+        const hay = (empresa+" "+uf+" "+tel+" "+fat+" "+urg).toLowerCase();
+
+        const okQ = !q || hay.includes(q);
+        const okU = !fUrg || urg === fUrg;
+        const okUF = !fUF || uf === fUF;
+
+        r.style.display = (okQ && okU && okUF) ? "" : "none";
+      });
+    }
+
+    function resetFilters(){
+      document.getElementById("q").value = "";
+      document.getElementById("fUrg").value = "";
+      document.getElementById("fUF").value = "";
+      applyFilters();
+    }
+
+    function exportWhats(){
+      const rows = Array.from(document.querySelectorAll("#leads tbody tr"))
+        .filter(r => r.style.display !== "none");
+
+      const lines = rows.map(r=>{
+        const rank = normalizeCellText(r.querySelector("[data-rank]"));
+        const empresa = normalizeCellText(r.querySelector("td:nth-child(2)"));
+        const uf = normalizeCellText(r.querySelector("td:nth-child(3)"));
+        const tel = normalizeCellText(r.querySelector("td:nth-child(4) span"));
+        const fat = normalizeCellText(r.querySelector("td:nth-child(5) span"));
+        const date = normalizeCellText(r.querySelector("td:nth-child(6)"));
+        const urg = normalizeCellText(r.querySelector("td:nth-child(7) span"));
+        return `${rank}) ${empresa} — ${uf} — ${tel} — ${fat} — ${date} — ${urg}`;
+      });
+
+      const text =
+`📌 LEADS (ordenados por prioridade)
+${lines.join("\n")}`;
+
+      navigator.clipboard.writeText(text).then(()=>{
+        alert("Lista copiada! Cole no WhatsApp.");
+      }).catch(()=>{
+        prompt("Copie manualmente:", text);
+      });
+    }
+
+    // Copy phone on click
+    document.addEventListener("click", (e)=>{
+      const btn = e.target.closest("[data-copy]");
+      if(!btn) return;
+      const tel = btn.parentElement?.querySelector("span.editable")?.innerText?.trim() || "";
+      if(!tel || tel==="—") return alert("Telefone vazio.");
+      navigator.clipboard.writeText(tel).then(()=>{
+        btn.textContent = "copiado";
+        setTimeout(()=>btn.textContent="copiar", 900);
+      });
+    });
+
+    // Events
+    document.getElementById("btnSort").addEventListener("click", reorder);
+    document.getElementById("btnExport").addEventListener("click", exportWhats);
+    document.getElementById("btnReset").addEventListener("click", resetFilters);
+
+    ["q","fUrg","fUF"].forEach(id=>{
+      document.getElementById(id).addEventListener("input", applyFilters);
+      document.getElementById(id).addEventListener("change", applyFilters);
+    });
+
+    // Reorder when user edits content (debounced)
+    let t=null;
+    document.addEventListener("input",(e)=>{
+      if(!e.target.closest("#leads")) return;
+      clearTimeout(t);
+      t=setTimeout(()=>{ reorder(); }, 600);
+    });
+
+    // Init
+    reorder();
+  </script>
+</body>
+</html>
